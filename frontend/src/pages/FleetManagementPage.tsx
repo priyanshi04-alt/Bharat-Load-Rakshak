@@ -62,7 +62,7 @@ export const FleetManagementPage: React.FC<FleetManagementPageProps> = ({ trucks
                   const dev = devices.find(d => d.deviceId === tr.deviceId);
                   return (
                     <tr key={tr.truckId} style={{ background: selectedTruck?.truckId === tr.truckId ? 'rgba(59, 130, 246, 0.1)' : 'transparent' }}>
-                      <td style={{ fontWeight: 700, color: '#ffffff' }}>{tr.registrationNumber}</td>
+                      <td style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{tr.registrationNumber}</td>
                       <td>{tr.deviceId}</td>
                       <td style={{ color: 'var(--text-secondary)' }}>{dev?.firmwareVersion || 'v2.1.0-ESP32'}</td>
                       <td>
