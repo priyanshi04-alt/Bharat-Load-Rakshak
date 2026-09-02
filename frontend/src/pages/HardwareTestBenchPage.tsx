@@ -103,18 +103,18 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
 
         <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '20px', alignItems: 'center' }}>
           {/* Simulated 16x2 OLED LCD Screen */}
-          <div style={{ background: '#020617', border: '3px solid #1e293b', borderRadius: '12px', padding: '16px', boxShadow: 'inset 0 0 15px rgba(0,0,0,0.8), 0 4px 20px rgba(59, 130, 246, 0.2)' }}>
+          <div style={{ background: 'var(--input-bg)', border: '2px solid var(--border-color)', borderRadius: '12px', padding: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 700, letterSpacing: '1px' }}>16x2 I2C LCD DISPLAY (0x27)</span>
-              <span style={{ fontSize: '0.65rem', color: '#34d399', fontWeight: 600 }}>● POWER ON</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '1px' }}>16x2 I2C LCD DISPLAY (0x27)</span>
+              <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 600 }}>● POWER ON</span>
             </div>
             
             {/* Screen Line 1 */}
-            <div style={{ background: '#090d16', border: '1px solid #1e293b', padding: '8px 12px', borderRadius: '6px', fontFamily: 'Courier New, monospace', fontSize: '1rem', fontWeight: 700, color: isBuzzerActive ? '#ef4444' : '#38bdf8', letterSpacing: '1px', textShadow: '0 0 8px rgba(56, 189, 248, 0.5)', marginBottom: '6px' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', padding: '8px 12px', borderRadius: '6px', fontFamily: 'Courier New, monospace', fontSize: '1rem', fontWeight: 700, color: isBuzzerActive ? '#ef4444' : 'var(--accent-blue)', letterSpacing: '1px', marginBottom: '6px' }}>
               Line 1: {isBuzzerActive ? `! ${currentStatus} !` : "BHARAT LOAD v2.1"}
             </div>
             {/* Screen Line 2 */}
-            <div style={{ background: '#090d16', border: '1px solid #1e293b', padding: '8px 12px', borderRadius: '6px', fontFamily: 'Courier New, monospace', fontSize: '0.9rem', fontWeight: 700, color: '#facc15', letterSpacing: '1px', textShadow: '0 0 8px rgba(250, 204, 21, 0.5)' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', padding: '8px 12px', borderRadius: '6px', fontFamily: 'Courier New, monospace', fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-amber)', letterSpacing: '1px' }}>
               Line 2: W:{weightKg}kg H:{humidityPercent}% G:{gasValue} A:{alcoholValue}
             </div>
           </div>
