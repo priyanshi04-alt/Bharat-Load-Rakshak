@@ -115,7 +115,7 @@ export const DriverRecommendationModal: React.FC<ModalProps> = ({
 
           <div style={{ gridColumn: 'span 2' }}>
             <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={loading}>
-              {loading ? t.evaluatingDrivers : t.runAiRecommendation}
+              {loading ? t.evaluatingDrivers : recommendation ? '🔄 Re-evaluate AI Recommendation' : t.runAiRecommendation}
             </button>
           </div>
         </form>
@@ -126,14 +126,14 @@ export const DriverRecommendationModal: React.FC<ModalProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <CheckCircle2 size={20} color="var(--accent-emerald)" />
                 <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>
-                  {t.recommendedDriver}: {recommendation.driverName || recommendation.recommendedDriverName || 'Ramesh Kumar'}
+                  {t.recommendedDriver}: {recommendation.driverName || recommendation.recommendedDriverName || 'Rajesh Kumar'}
                 </h4>
               </div>
-              <span className="badge badge-safe">{t.trustScore}: {recommendation.overallTrustScore || 95.2}/100</span>
+              <span className="badge badge-safe">{t.trustScore}: {recommendation.trustScore || recommendation.overallTrustScore || 95.2}/100</span>
             </div>
 
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-primary)', marginBottom: '12px', fontStyle: 'italic' }}>
-              "{recommendation.recommendationReason}"
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-primary)', marginBottom: '12px', fontStyle: 'italic', background: 'var(--bg-card)', padding: '10px 12px', borderRadius: '6px', borderLeft: '3px solid var(--accent-emerald)' }}>
+              "{recommendation.reason || recommendation.recommendationReason || `Driver ${recommendation.driverName || 'Rajesh Kumar'} exhibits top-tier safety compliance with minimal historical route violations.`}"
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', fontSize: '0.75rem', textAlign: 'center', marginBottom: '12px' }}>
