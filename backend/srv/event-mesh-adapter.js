@@ -9,7 +9,7 @@ const localEventBus = new EventEmitter();
 class EventMeshAdapter {
   constructor() {
     this.mode = process.env.APP_MODE === 'SAP' ? 'SAP' : 'LOCAL';
-    console.log(`[EventMeshAdapter] Initialized in MODE=${this.mode}`);
+    console.log(`[EventMeshAdapter] Initialized successfully`);
   }
 
   async publish(eventName, payload) {

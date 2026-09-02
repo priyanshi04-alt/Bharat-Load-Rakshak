@@ -237,7 +237,6 @@ async function seedInitialDatabase(db) {
 async function startServer() {
   const app = express();
   app.use(cors());
-  app.use(express.json());
 
   const server = http.createServer(app);
 
@@ -257,7 +256,10 @@ async function startServer() {
   await documentEngine.checkDocumentExpirations(db);
 
   // Attach CAP Express Router
-  await cds.serve('all').in(app);
+  await cds.serve('all').from(cds.model).in(app);
+
+  // Body parser for REST API routes only
+  app.use('/api', express.json());
 
   // --- REST API Endpoint: POST /api/telemetry ---
   app.post('/api/telemetry', async (req, res) => {
@@ -339,7 +341,6 @@ async function startServer() {
     console.log(`📡 REST Ingestion Endpoint: http://localhost:${PORT}/api/telemetry`);
     console.log(`📊 OData v4 Endpoint: http://localhost:${PORT}/odata/v4/fleet`);
     console.log(`⚡ WebSocket Stream Server: ws://localhost:${PORT}`);
-    console.log(`⚙️ Mode: ${process.env.APP_MODE || 'LOCAL'} | Demo Mode: ${process.env.DEMO_MODE || 'false'}`);
     console.log(`=======================================================`);
   });
 }

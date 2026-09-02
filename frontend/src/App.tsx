@@ -156,6 +156,7 @@ export const App: React.FC = () => {
             onNavigateTab={(t) => setActiveTab(t)}
             onOpenDriverModal={() => setIsDriverModalOpen(true)}
             lang={lang}
+            currentRole={currentRole}
           />
         )}
 

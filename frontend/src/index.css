@@ -265,3 +265,13 @@ table.custom-table td {
 table.custom-table tr:hover td {
   background: var(--table-row-hover);
 }
+
+/* Hide Leaflet map attribution watermark */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Dark mode OpenStreetMap tile styling */
+[data-theme='dark'] .leaflet-tile-container img {
+  filter: brightness(0.7) invert(1) contrast(1.1) hue-rotate(200deg);
+}

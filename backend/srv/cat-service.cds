@@ -44,7 +44,7 @@ service FleetService @(path:'/odata/v4/fleet') {
 
   function getFleetSummary() returns FleetSummary;
   
-  function recommendDriver(
+  action recommendDriver(
     cargoType           : String,
     cargoValue          : Double,
     destination         : String,

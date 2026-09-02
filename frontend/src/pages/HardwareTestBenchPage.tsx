@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sendSimulatedTelemetry } from '../services/api';
-import { Cpu, AlertTriangle, ShieldCheck, Wind, CloudRain, Zap } from 'lucide-react';
+import { Cpu, AlertTriangle, Wind, CloudRain, Zap, Volume2, Radio, CheckCircle2 } from 'lucide-react';
 import { Language, translations } from '../translations';
 
 interface HardwareTestBenchPageProps {
@@ -10,11 +10,13 @@ interface HardwareTestBenchPageProps {
 
 export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ onRefresh, lang = 'en' }) => {
   const t = translations[lang] || translations['en'];
+
+  // Current Active Testbench State
   const [truckId, setTruckId] = useState('BLR-TRK-001');
   const [deviceId] = useState('BLR-DEV-001');
   const [weightKg, setWeightKg] = useState(8450);
-  const [humidityPercent, setHumidityPercent] = useState(60);
-  const [rainDetected] = useState(false);
+  const [humidityPercent, setHumidityPercent] = useState(58);
+  const [rainDetected, setRainDetected] = useState(false);
   const [gasValue, setGasValue] = useState(110);
   const [alcoholValue, setAlcoholValue] = useState(0);
   const [latitude] = useState(28.6139);
@@ -23,28 +25,55 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Derived Circuit Hardware State for Visual Simulation Widget
+  const isOverload = weightKg > 10000;
+  const isAlcoholAlert = alcoholValue > 150;
+  const isGasAlert = gasValue > 300;
+  const isBuzzerActive = isOverload || isAlcoholAlert || isGasAlert;
+
+  let currentStatus = "NORMAL";
+  if (isOverload) currentStatus = "OVERLOAD";
+  else if (isAlcoholAlert) currentStatus = "ALCOHOL ALERT";
+  else if (isGasAlert) currentStatus = "GAS LEAK";
+  else if (rainDetected) currentStatus = "WATER INGRESS";
+
   const handleTransmit = async (overrides: any = {}) => {
     setLoading(true);
     setFeedback(null);
+
+    const newWeight = overrides.weightKg !== undefined ? overrides.weightKg : Number(weightKg);
+    const newHumidity = overrides.humidityPercent !== undefined ? overrides.humidityPercent : Number(humidityPercent);
+    const newRain = overrides.rainDetected !== undefined ? overrides.rainDetected : rainDetected;
+    const newGas = overrides.gasValue !== undefined ? overrides.gasValue : Number(gasValue);
+    const newAlcohol = overrides.alcoholValue !== undefined ? overrides.alcoholValue : Number(alcoholValue);
+    const newSpeed = overrides.speedKmph !== undefined ? overrides.speedKmph : Number(speedKmph);
+
+    // Update local simulated state immediately
+    setWeightKg(newWeight);
+    setHumidityPercent(newHumidity);
+    setRainDetected(newRain);
+    setGasValue(newGas);
+    setAlcoholValue(newAlcohol);
+    setSpeedKmph(newSpeed);
 
     const payload = {
       deviceId,
       truckId,
       timestamp: new Date().toISOString(),
-      weightKg: overrides.weightKg !== undefined ? overrides.weightKg : Number(weightKg),
-      humidityPercent: overrides.humidityPercent !== undefined ? overrides.humidityPercent : Number(humidityPercent),
-      rainDetected: overrides.rainDetected !== undefined ? overrides.rainDetected : rainDetected,
-      gasValue: overrides.gasValue !== undefined ? overrides.gasValue : Number(gasValue),
-      alcoholValue: overrides.alcoholValue !== undefined ? overrides.alcoholValue : Number(alcoholValue),
+      weightKg: newWeight,
+      humidityPercent: newHumidity,
+      rainDetected: newRain,
+      gasValue: newGas,
+      alcoholValue: newAlcohol,
       latitude: overrides.latitude !== undefined ? overrides.latitude : Number(latitude),
       longitude: overrides.longitude !== undefined ? overrides.longitude : Number(longitude),
-      speedKmph: overrides.speedKmph !== undefined ? overrides.speedKmph : Number(speedKmph),
+      speedKmph: newSpeed,
       isDemoData: false
     };
 
     try {
       const res = await sendSimulatedTelemetry(payload);
-      setFeedback(`✓ Telemetry Ingested! Alerts Generated: ${res.data?.alertsGenerated || 0}`);
+      setFeedback(`✓ Telemetry Transmitted to Backend! Alerts Generated: ${res.data?.alertsGenerated || 0}`);
       onRefresh();
     } catch (err: any) {
       setFeedback(`❌ Ingestion Error: ${err.message}`);
@@ -62,6 +91,68 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
         </p>
       </div>
 
+      {/* HARDWARE CIRCUIT & OLED DISPLAY WIDGET (IN-PLACE REALTIME FEEDBACK) */}
+      <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)', border: '1px solid rgba(59, 130, 246, 0.4)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Radio size={20} color="#60a5fa" className="pulse-dot-active" />
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>{t.circuitScreenTitle}</h3>
+          </div>
+          <span className="badge badge-info">MCU: ESP32-WROOM-32</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '20px', alignItems: 'center' }}>
+          {/* Simulated 16x2 OLED LCD Screen */}
+          <div style={{ background: '#020617', border: '3px solid #1e293b', borderRadius: '12px', padding: '16px', boxShadow: 'inset 0 0 15px rgba(0,0,0,0.8), 0 4px 20px rgba(59, 130, 246, 0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 700, letterSpacing: '1px' }}>16x2 I2C LCD DISPLAY (0x27)</span>
+              <span style={{ fontSize: '0.65rem', color: '#34d399', fontWeight: 600 }}>● POWER ON</span>
+            </div>
+            
+            {/* Screen Line 1 */}
+            <div style={{ background: '#090d16', border: '1px solid #1e293b', padding: '8px 12px', borderRadius: '6px', fontFamily: 'Courier New, monospace', fontSize: '1rem', fontWeight: 700, color: isBuzzerActive ? '#ef4444' : '#38bdf8', letterSpacing: '1px', textShadow: '0 0 8px rgba(56, 189, 248, 0.5)', marginBottom: '6px' }}>
+              Line 1: {isBuzzerActive ? `! ${currentStatus} !` : "BHARAT LOAD v2.1"}
+            </div>
+            {/* Screen Line 2 */}
+            <div style={{ background: '#090d16', border: '1px solid #1e293b', padding: '8px 12px', borderRadius: '6px', fontFamily: 'Courier New, monospace', fontSize: '0.9rem', fontWeight: 700, color: '#facc15', letterSpacing: '1px', textShadow: '0 0 8px rgba(250, 204, 21, 0.5)' }}>
+              Line 2: W:{weightKg}kg H:{humidityPercent}% G:{gasValue} A:{alcoholValue}
+            </div>
+          </div>
+
+          {/* LED Signal Lights & Buzzer Status */}
+          <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{t.physicalHardwareSignals}</div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: isBuzzerActive ? '#ef4444' : '#334155', boxShadow: isBuzzerActive ? '0 0 12px #ef4444' : 'none' }} />
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: isBuzzerActive ? '#f87171' : 'var(--text-secondary)' }}>{t.redAlertLed}</span>
+              </div>
+              <span className={`badge ${isBuzzerActive ? 'badge-danger' : 'badge-safe'}`}>{isBuzzerActive ? 'ON 🔴' : 'OFF'}</span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: (!isBuzzerActive && currentStatus === 'NORMAL') ? '#10b981' : '#334155', boxShadow: (!isBuzzerActive && currentStatus === 'NORMAL') ? '0 0 12px #10b981' : 'none' }} />
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: (!isBuzzerActive && currentStatus === 'NORMAL') ? '#34d399' : 'var(--text-secondary)' }}>{t.greenSafeLed}</span>
+              </div>
+              <span className={`badge ${(!isBuzzerActive && currentStatus === 'NORMAL') ? 'badge-safe' : 'badge-info'}`}>{(!isBuzzerActive && currentStatus === 'NORMAL') ? 'ON 🟢' : 'OFF'}</span>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Volume2 size={16} color={isBuzzerActive ? '#ef4444' : 'var(--text-muted)'} />
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: isBuzzerActive ? '#f87171' : 'var(--text-secondary)' }}>{t.activeBuzzer}</span>
+              </div>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: isBuzzerActive ? '#f87171' : 'var(--text-muted)' }}>
+                {isBuzzerActive ? `🔊 ${t.alarmActiveText}` : 'OFF'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* QUICK INJECTORS & CUSTOM FORM */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         {/* Quick Trigger Preset Buttons */}
         <div className="glass-panel" style={{ padding: '24px' }}>
@@ -69,10 +160,6 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             <Zap size={22} color="#f59e0b" />
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>One-Click Hardware Event Presets</h3>
           </div>
-
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>
-            Click any event preset to instantly publish simulated ESP32 hardware telemetry over the REST/MQTT pipeline:
-          </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <button
@@ -133,7 +220,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
               onClick={() => handleTransmit({ weightKg: 8450, alcoholValue: 0, rainDetected: false, gasValue: 110, humidityPercent: 58 })}
               disabled={loading}
             >
-              <ShieldCheck size={20} color="#34d399" />
+              <CheckCircle2 size={20} color="#34d399" />
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontWeight: 700, color: '#34d399' }}>{t.resetNormal}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Returns all sensor values to safe baseline levels.</div>
@@ -146,7 +233,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
         <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
             <Cpu size={22} color="#3b82f6" />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Custom Telemetry Payload Generator</h3>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{t.customPayloadTitle}</h3>
           </div>
 
           {feedback && (
@@ -183,10 +270,12 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
           </div>
 
           <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => handleTransmit()} disabled={loading}>
-            Transmit Telemetry to Backend Pipeline
+            {t.transmitTelemetryBtn}
           </button>
         </div>
       </div>
     </div>
   );
 };
+
+export default HardwareTestBenchPage;

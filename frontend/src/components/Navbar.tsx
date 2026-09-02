@@ -29,25 +29,30 @@ export const Navbar: React.FC<NavbarProps> = ({
   const t = translations[lang] || translations['en'];
 
   const roles: { key: UserRole; label: string }[] = [
-    { key: 'ADMIN', label: 'System Admin' },
-    { key: 'OWNER', label: 'Truck Owner' },
-    { key: 'LOGISTICS_MANAGER', label: 'Logistics Manager' },
-    { key: 'DRIVER', label: 'Driver View' },
-    { key: 'WAREHOUSE_USER', label: 'Warehouse Manager' }
+    { key: 'OWNER', label: t.roleOwner },
+    { key: 'ADMIN', label: t.roleAdmin },
+    { key: 'LOGISTICS_MANAGER', label: t.roleLogisticsManager },
+    { key: 'DRIVER', label: t.roleDriver },
+    { key: 'WAREHOUSE_USER', label: t.roleWarehouse }
   ];
 
   const languages: { key: Language; label: string; flag: string }[] = [
     { key: 'en', label: 'English', flag: '🇬🇧' },
     { key: 'hi', label: 'हिन्दी (Hindi)', flag: '🇮🇳' },
     { key: 'mr', label: 'मराठी (Marathi)', flag: '🚩' },
-    { key: 'gu', label: 'ગુજરાતી (Gujarati)', flag: '🍊' },
-    { key: 'pa', label: 'ਪੰਜਾਬੀ (Punjabi)', flag: '🌾' },
-    { key: 'ta', label: 'தமிழ் (Tamil)', flag: '🏛️' },
-    { key: 'te', label: 'తెలుగు (Telugu)', flag: '🌾' },
-    { key: 'kn', label: 'ಕನ್ನಡ (Kannada)', flag: '🐘' }
+    { key: 'pa', label: 'ਪੰਜਾਬੀ (Punjabi)', flag: '🌾' }
   ];
 
-  const tabs = [
+  // Role-based allowed tabs filtering (RBAC)
+  const roleAllowedTabIds: Record<UserRole, string[]> = {
+    OWNER: ['overview', 'tracking', 'cargo', 'driver', 'fleet', 'alerts', 'trips', 'documents', 'reports', 'testbench'],
+    ADMIN: ['overview', 'tracking', 'cargo', 'driver', 'fleet', 'alerts', 'trips', 'documents', 'reports', 'testbench'],
+    LOGISTICS_MANAGER: ['overview', 'tracking', 'cargo', 'fleet', 'alerts', 'trips', 'documents', 'reports'],
+    DRIVER: ['overview', 'tracking', 'trips', 'alerts'],
+    WAREHOUSE_USER: ['overview', 'cargo', 'trips', 'alerts', 'testbench']
+  };
+
+  const allTabs = [
     { id: 'overview', label: t.tabOverview },
     { id: 'tracking', label: t.tabTracking },
     { id: 'cargo', label: t.tabCargo },
@@ -59,6 +64,17 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'reports', label: t.tabReports },
     { id: 'testbench', label: t.tabTestbench }
   ];
+
+  const allowedTabIds = roleAllowedTabIds[currentRole] || roleAllowedTabIds.OWNER;
+  const visibleTabs = allTabs.filter(tab => allowedTabIds.includes(tab.id));
+
+  const handleRoleSwitch = (newRole: UserRole) => {
+    onRoleChange(newRole);
+    const newAllowed = roleAllowedTabIds[newRole] || roleAllowedTabIds.OWNER;
+    if (!newAllowed.includes(activeTab)) {
+      onTabChange('overview');
+    }
+  };
 
   return (
     <header className="glass-panel" style={{ borderRadius: 0, borderTop: 'none', borderLeft: 'none', borderRight: 'none', zIndex: 1000, position: 'sticky', top: 0 }}>
@@ -73,7 +89,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <h1 style={{ fontSize: '1.25rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
                 {t.title}
               </h1>
-              <span className="badge badge-info" style={{ fontSize: '0.65rem' }}>MODE=LOCAL</span>
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
               {t.subtitle}
@@ -131,14 +146,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Role Switcher Dropdown */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(59, 130, 246, 0.1)', padding: '6px 14px', borderRadius: '8px', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(59, 130, 246, 0.12)', padding: '6px 14px', borderRadius: '8px', border: '1px solid rgba(59, 130, 246, 0.35)' }}>
             <User size={16} color="var(--accent-blue)" />
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>{t.currentRole}</div>
               <select
                 value={currentRole}
-                onChange={(e) => onRoleChange(e.target.value as UserRole)}
-                style={{ background: 'transparent', color: 'var(--accent-blue)', border: 'none', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', outline: 'none' }}
+                onChange={(e) => handleRoleSwitch(e.target.value as UserRole)}
+                style={{ background: 'transparent', color: '#60a5fa', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', outline: 'none' }}
               >
                 {roles.map(r => (
                   <option key={r.key} value={r.key} style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>
@@ -151,9 +166,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Navigation Tabs Bar */}
+      {/* Navigation Tabs Bar - Filtered by Role */}
       <div style={{ display: 'flex', gap: '4px', padding: '0 24px', overflowX: 'auto' }}>
-        {tabs.map(tab => {
+        {visibleTabs.map(tab => {
           const isActive = activeTab === tab.id;
           return (
             <button
@@ -180,3 +195,5 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
+export default Navbar;
