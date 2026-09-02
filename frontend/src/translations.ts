@@ -33,6 +33,10 @@ export interface TranslationKeys {
   runAiRecommendation: string;
   evaluatingDrivers: string;
   assignDriverToTrip: string;
+  manageFleet: string;
+  viewFullscreenMap: string;
+  resolveBtn: string;
+  acknowledgeBtn: string;
   // AI Modal
   aiRecommendationTitle: string;
   aiRecommendationDesc: string;
@@ -48,6 +52,34 @@ export interface TranslationKeys {
   drivingEfficiencyLabel: string;
   reliabilityLabel: string;
   drivingEfficiencyNote: string;
+  // Dashboard & Pages
+  fleetSafetyHeader: string;
+  activeAlertFeed: string;
+  registration: string;
+  model: string;
+  status: string;
+  maxAllowedWeight: string;
+  currentWeight: string;
+  loadStatus: string;
+  gasConcentration: string;
+  alcoholSensor: string;
+  overloadAlert: string;
+  safeLoad: string;
+  abnormalGas: string;
+  verifyRequire: string;
+  normalState: string;
+  driverName: string;
+  licenseNumber: string;
+  tripsCompleted: string;
+  totalViolations: string;
+  documentsManager: string;
+  expiryDate: string;
+  valid: string;
+  expired: string;
+  warning: string;
+  tripOrigin: string;
+  tripDestination: string;
+  cargoTypeLabel: string;
 }
 
 export const translations: Record<Language, TranslationKeys> = {
@@ -81,6 +113,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "Run AI Recommendation",
     evaluatingDrivers: "Evaluating Drivers...",
     assignDriverToTrip: "Assign Driver to Trip",
+    manageFleet: "Manage Fleet →",
+    viewFullscreenMap: "View Fullscreen Map",
+    resolveBtn: "Resolve →",
+    acknowledgeBtn: "Acknowledge",
     aiRecommendationTitle: "AI Driver Recommendation Engine",
     aiRecommendationDesc: "Evaluates safety ratings, compliance, and ML risk models for dispatch matching",
     cargoType: "Cargo Type",
@@ -93,7 +129,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "Route Compliance Score",
     drivingEfficiencyLabel: "Driving Efficiency Score (Proxy)*",
     reliabilityLabel: "Reliability Score",
-    drivingEfficiencyNote: "* Driving Efficiency Score is a transparent proxy based on speed consistency, trip duration, and route efficiency."
+    drivingEfficiencyNote: "* Driving Efficiency Score is a transparent proxy based on speed consistency, trip duration, and route efficiency.",
+    fleetSafetyHeader: "Fleet Safety & Supply Chain Dashboard",
+    activeAlertFeed: "Active Alert Feed",
+    registration: "Registration",
+    model: "Model",
+    status: "Status",
+    maxAllowedWeight: "Max Allowed Weight",
+    currentWeight: "Current Weight",
+    loadStatus: "Load Status",
+    gasConcentration: "Gas Concentration",
+    alcoholSensor: "Alcohol Sensor",
+    overloadAlert: "OVERLOAD ALERT",
+    safeLoad: "SAFE LOAD",
+    abnormalGas: "⚠️ Abnormal",
+    verifyRequire: "⚠️ VERIFY REQUIRE",
+    normalState: "0 (NORMAL)",
+    driverName: "Driver Name",
+    licenseNumber: "License Number",
+    tripsCompleted: "Trips Completed",
+    totalViolations: "Total Violations",
+    documentsManager: "Vehicle & Driver Document Manager",
+    expiryDate: "Expiry Date",
+    valid: "VALID",
+    expired: "EXPIRED",
+    warning: "WARNING",
+    tripOrigin: "Origin",
+    tripDestination: "Destination",
+    cargoTypeLabel: "Cargo Type"
   },
   hi: {
     title: "भारत लोड रक्षक",
@@ -125,6 +188,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "एआई सिफारिश चलाएं",
     evaluatingDrivers: "चालकों का मूल्यांकन किया जा रहा है...",
     assignDriverToTrip: "चालक को यात्रा असाइन करें",
+    manageFleet: "बेड़ा प्रबंधित करें →",
+    viewFullscreenMap: "पूर्ण नक्शा देखें",
+    resolveBtn: "समाधान करें →",
+    acknowledgeBtn: "स्वीकार करें",
     aiRecommendationTitle: "एआई ड्राइवर सिफारिश इंजन",
     aiRecommendationDesc: "सुरक्षा रेटिंग, अनुपालन और एमएल जोखिम मॉडल का मूल्यांकन करता है",
     cargoType: "कार्गो प्रकार",
@@ -137,7 +204,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "मार्ग अनुपालन स्कोर",
     drivingEfficiencyLabel: "ड्राइविंग दक्षता स्कोर (प्रॉक्सी)*",
     reliabilityLabel: "विश्वसनीयता स्कोर",
-    drivingEfficiencyNote: "* ड्राइविंग दक्षता स्कोर गति स्थिरता और यात्रा अवधि पर आधारित एक पारदर्शी प्रॉक्सी है।"
+    drivingEfficiencyNote: "* ड्राइविंग दक्षता स्कोर गति स्थिरता और यात्रा अवधि पर आधारित एक पारदर्शी प्रॉक्सी है।",
+    fleetSafetyHeader: "बेड़ा सुरक्षा और आपूर्ति श्रृंखला डैशबोर्ड",
+    activeAlertFeed: "सक्रिय अलर्ट फ़ीड",
+    registration: "पंजीकरण संख्या",
+    model: "मॉडल",
+    status: "स्थिति",
+    maxAllowedWeight: "अधिकतम अनुमत वजन",
+    currentWeight: "वर्तमान वजन",
+    loadStatus: "लोड स्थिति",
+    gasConcentration: "गैस सांद्रता",
+    alcoholSensor: "अल्कोहल सेंसर",
+    overloadAlert: "ओवरलोड अलर्ट",
+    safeLoad: "सुरक्षित लोड",
+    abnormalGas: "⚠️ असामान्य",
+    verifyRequire: "⚠️ सत्यापन आवश्यक",
+    normalState: "0 (सामान्य)",
+    driverName: "चालक का नाम",
+    licenseNumber: "लाइसेंस नंबर",
+    tripsCompleted: "पूर्ण यात्राएं",
+    totalViolations: "कुल उल्लंघन",
+    documentsManager: "वाहन और चालक दस्तावेज़ प्रबंधक",
+    expiryDate: "समाप्ति तिथि",
+    valid: "वैध",
+    expired: "समाप्त",
+    warning: "चेतावनी",
+    tripOrigin: "प्रस्थान",
+    tripDestination: "गंतव्य",
+    cargoTypeLabel: "कार्गो प्रकार"
   },
   mr: {
     title: "भारत लोड रक्षक",
@@ -169,6 +263,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "एआय शिफारस चालवा",
     evaluatingDrivers: "चालकांचे मूल्यांकन सुरू आहे...",
     assignDriverToTrip: "फेरीसाठी चालक नियुक्त करा",
+    manageFleet: "ताफा व्यवस्थापित करा →",
+    viewFullscreenMap: "पूर्ण नकाशा पहा",
+    resolveBtn: "निराकरण करा →",
+    acknowledgeBtn: "स्वीकार करा",
     aiRecommendationTitle: "एआय ड्रायव्हर शिफारस इंजिन",
     aiRecommendationDesc: "सुरक्षा रेटिंग आणि जोखीम मॉडेलचे मूल्यांकन करते",
     cargoType: "कार्गो प्रकार",
@@ -181,7 +279,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "मार्ग पालन स्कोर",
     drivingEfficiencyLabel: "ड्राइव्ह कार्यक्षमता स्कोर (प्रॉक्सी)*",
     reliabilityLabel: "विश्वासार्हता स्कोर",
-    drivingEfficiencyNote: "* ड्राईव्ह कार्यक्षमता स्कोर वेग सुसंगततेवर आधारित पारदर्शक प्रॉक्सी आहे."
+    drivingEfficiencyNote: "* ड्राईव्ह कार्यक्षमता स्कोर वेग सुसंगततेवर आधारित पारदर्शक प्रॉक्सी आहे.",
+    fleetSafetyHeader: "ताफा सुरक्षितता आणि पुरवठा साखळी",
+    activeAlertFeed: "थेट अलर्ट फीड",
+    registration: "नोंदणी क्रमांक",
+    model: "मॉडेल",
+    status: "स्थिती",
+    maxAllowedWeight: "कमाल मंजूर वजन",
+    currentWeight: "सध्याचे वजन",
+    loadStatus: "लोड स्थिती",
+    gasConcentration: "गॅस प्रमाण",
+    alcoholSensor: "अल्कोहोल सेन्सर",
+    overloadAlert: "ओवरलोड अलर्ट",
+    safeLoad: "सुरक्षित लोड",
+    abnormalGas: "⚠️ असामान्य",
+    verifyRequire: "⚠️ तपासणी आवश्यक",
+    normalState: "0 (सामान्य)",
+    driverName: "चालकाचे नाव",
+    licenseNumber: "परवाना क्रमांक",
+    tripsCompleted: "पूर्ण झालेल्या फेऱ्या",
+    totalViolations: "एकूण उल्लंघन",
+    documentsManager: "कागदपत्र व्यवस्थापक",
+    expiryDate: "मुदत समाप्ती",
+    valid: "वैध",
+    expired: "कालबाह्य",
+    warning: "इशारा",
+    tripOrigin: "प्रारंभ",
+    tripDestination: "गंतव्य",
+    cargoTypeLabel: "कार्गो प्रकार"
   },
   gu: {
     title: "ભારત લોડ રક્ષક",
@@ -213,6 +338,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "એઆઈ ભલામણ ચલાવો",
     evaluatingDrivers: "ડ્રાઇવરોનું મૂલ્યાંકન થઈ રહ્યું છે...",
     assignDriverToTrip: "ટ્રિપ માટે ડ્રાઇવર સોંપો",
+    manageFleet: "કાફલો સંચાલિત કરો →",
+    viewFullscreenMap: "મોટો નકશો જુઓ",
+    resolveBtn: "ઉકેલો →",
+    acknowledgeBtn: "સ્વીકારો",
     aiRecommendationTitle: "એઆઈ ડ્રાઇવર ભલામણ એન્જિન",
     aiRecommendationDesc: "સુરક્ષા રેટિંગ્સ અને રિસ્ક મોડલ્સનું મૂલ્યાંકન કરે છે",
     cargoType: "કાર્ગો પ્રકાર",
@@ -225,7 +354,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "રૂટ પાલન સ્કોર",
     drivingEfficiencyLabel: "ડ્રાઇવિંગ ક્ષમતા સ્કોર (પ્રોક્સી)*",
     reliabilityLabel: "વિશ્વસનીયતા સ્કોર",
-    drivingEfficiencyNote: "* ડ્રાઇવિંગ ક્ષમતા સ્કોર ઝડપ સ્થિરતા પર આધારિત પારદર્શક પ્રોક્સી છે."
+    drivingEfficiencyNote: "* ડ્રાઇવિંગ ક્ષમતા સ્કોર ઝડપ સ્થિરતા પર આધારિત પારદર્શક પ્રોક્સી છે.",
+    fleetSafetyHeader: "કાફલાની સુરક્ષા ડેશબોર્ડ",
+    activeAlertFeed: "સક્રિય એલર્ટ ફીડ",
+    registration: "રજીસ્ટ્રેશન નંબર",
+    model: "મોડેલ",
+    status: "સ્થિતિ",
+    maxAllowedWeight: "મહત્તમ વજન",
+    currentWeight: "વર્તમાન વજન",
+    loadStatus: "લોડ સ્થિતિ",
+    gasConcentration: "ગેસ પ્રમાણ",
+    alcoholSensor: "આલ્કોહોલ સેન્સર",
+    overloadAlert: "ઓવરલોડ એલર્ટ",
+    safeLoad: "સુરક્ષિત લોડ",
+    abnormalGas: "⚠️ અસામાન્ય",
+    verifyRequire: "⚠️ ચકાસણી જરૂરી",
+    normalState: "0 (સામાન્ય)",
+    driverName: "ડ્રાઇવરનું નામ",
+    licenseNumber: "લાઇસન્સ નંબર",
+    tripsCompleted: "પૂર્ણ થયેલ ટ્રિપ્સ",
+    totalViolations: "કુલ ઉલ્લંઘન",
+    documentsManager: "દસ્તાવેજ વ્યવસ્થાપક",
+    expiryDate: "સમાપ્તિ તારીખ",
+    valid: "માન્ય",
+    expired: "સમાપ્ત",
+    warning: "ચેતવણી",
+    tripOrigin: "ઉદ્ગમ",
+    tripDestination: "મંજિલ",
+    cargoTypeLabel: "કાર્ગો પ્રકાર"
   },
   pa: {
     title: "ਭਾਰਤ ਲੋਡ ਰਕਸ਼ਕ",
@@ -257,6 +413,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "ਏਆਈ ਸਿਫਾਰਸ਼ ਚਲਾਓ",
     evaluatingDrivers: "ਡਰਾਈਵਰਾਂ ਦਾ ਮੁਲਾਂਕਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
     assignDriverToTrip: "ਡਰਾਈਵਰ ਨਿਯੁਕਤ ਕਰੋ",
+    manageFleet: "ਫਲੀਟ ਪ੍ਰਬੰਧਿਤ ਕਰੋ →",
+    viewFullscreenMap: "ਪੂਰਾ ਨਕਸ਼ਾ ਵੇਖੋ",
+    resolveBtn: "ਹੱਲ ਕਰੋ →",
+    acknowledgeBtn: "ਪ੍ਰਵਾਨ ਕਰੋ",
     aiRecommendationTitle: "ਏਆਈ ਡਰਾਈਵਰ ਸਿਫਾਰਸ਼ ਇੰਜਣ",
     aiRecommendationDesc: "ਸੁਰੱਖਿਆ ਰੇਟਿੰਗਾਂ ਅਤੇ ਜੋਖਮ ਮਾਡਲਾਂ ਦਾ ਮੁਲਾਂਕਣ ਕਰਦਾ ਹੈ",
     cargoType: "ਕਾਰਗੋ ਕਿਸਮ",
@@ -269,7 +429,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "ਰੂਟ ਪਾਲਣਾ ਸਕੋਰ",
     drivingEfficiencyLabel: "ਡਰਾਈਵਿੰਗ ਕੁਸ਼ਲਤਾ ਸਕੋਰ (ਪ੍ਰੋਕਸੀ)*",
     reliabilityLabel: "ਭਰੋਸੇਯੋਗਤਾ ਸਕੋਰ",
-    drivingEfficiencyNote: "* ਡਰਾਈਵਿੰਗ ਕੁਸ਼ਲਤਾ ਸਕੋਰ ਗਤੀ ਦੀ ਸਥਿਰਤਾ 'ਤੇ ਅਧਾਰਤ ਇੱਕ ਪਾਰਦਰਸ਼ੀ ਪ੍ਰੋਕਸੀ ਹੈ।"
+    drivingEfficiencyNote: "* ਡਰਾਈਵਿੰਗ ਕੁਸ਼ਲਤਾ ਸਕੋਰ ਗਤੀ ਦੀ ਸਥਿਰਤਾ 'ਤੇ ਅਧਾਰਤ ਇੱਕ ਪਾਰਦਰਸ਼ੀ ਪ੍ਰੋਕਸੀ ਹੈ।",
+    fleetSafetyHeader: "ਫਲੀਟ ਸੁਰੱਖਿਆ ਡੈਸ਼ਬੋਰਡ",
+    activeAlertFeed: "ਸਰਗਰਮ ਅਲਰਟ ਫੀਡ",
+    registration: "ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਨੰਬਰ",
+    model: "ਮਾਡਲ",
+    status: "ਸਥਿਤੀ",
+    maxAllowedWeight: "ਵੱਧ ਤੋਂ ਵੱਧ ਭਾਰ",
+    currentWeight: "ਮੌਜੂਦਾ ਭਾਰ",
+    loadStatus: "ਲੋਡ ਸਥਿਤੀ",
+    gasConcentration: "ਗੈਸ ਦੀ ਮਾਤਰਾ",
+    alcoholSensor: "ਸ਼ਰਾਬ ਸੈਂਸਰ",
+    overloadAlert: "ਓਵਰਲੋਡ ਅਲਰਟ",
+    safeLoad: "ਸੁਰੱਖਿਅਤ ਲੋਡ",
+    abnormalGas: "⚠️ ਅਸਧਾਰਨ",
+    verifyRequire: "⚠️ ਜਾਂਚ ਦੀ ਲੋੜ",
+    normalState: "0 (ਸਧਾਰਨ)",
+    driverName: "ਡਰਾਈਵਰ ਦਾ ਨਾਮ",
+    licenseNumber: "ਲਾਇਸੈਂਸ ਨੰਬਰ",
+    tripsCompleted: "ਪੂਰੀਆਂ ਹੋਈਆਂ ਯਾਤਰਾਵਾਂ",
+    totalViolations: "ਕੁੱਲ ਉਲੰਘਣਾਵਾਂ",
+    documentsManager: "ਦਸਤਾਵੇਜ਼ ਪ੍ਰਬੰਧਕ",
+    expiryDate: "ਮਿਆਦ ਪੁੱਗਣ ਦੀ ਮਿਤੀ",
+    valid: "ਜਾਇਜ਼",
+    expired: "ਮਿਆਦ ਪੁੱਗੀ",
+    warning: "ਚੇਤਾਵਨੀ",
+    tripOrigin: "ਸ਼ੁਰੂਆਤ",
+    tripDestination: "ਮੰਜ਼ਿਲ",
+    cargoTypeLabel: "ਕਾਰਗੋ ਕਿਸਮ"
   },
   ta: {
     title: "பாரத் லோட் ரக்ஷக்",
@@ -301,6 +488,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "AI பரிந்துரையை இயக்கு",
     evaluatingDrivers: "ஓட்டுநர்கள் மதிப்பிடப்படுகிறார்கள்...",
     assignDriverToTrip: "பயணத்திற்கு ஓட்டுநரை நியமிக்கவும்",
+    manageFleet: "வாகனங்களை நிர்வகி →",
+    viewFullscreenMap: "முழு வரைபடம் காண்",
+    resolveBtn: "தீர்வு செய் →",
+    acknowledgeBtn: "ஏற்றுக்கொள்",
     aiRecommendationTitle: "AI ஓட்டுநர் பரிந்துரை அமைப்பு",
     aiRecommendationDesc: "பாதுகாப்பு மற்றும் ஆபத்து மாதிரிகளை மதிப்பிடுகிறது",
     cargoType: "சரக்கு வகை",
@@ -313,7 +504,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "பாதை பின்பற்றல் மதிப்பெண்",
     drivingEfficiencyLabel: "ஓட்டுநர் திறன் மதிப்பெண்*",
     reliabilityLabel: "நம்பகத்தன்மை மதிப்பெண்",
-    drivingEfficiencyNote: "* ஓட்டுநர் திறன் மதிப்பெண் வேகம் மற்றும் பயண நேரத்தை அடிப்படையாகக் கொண்டது."
+    drivingEfficiencyNote: "* ஓட்டுநர் திறன் மதிப்பெண் வேகம் மற்றும் பயண நேரத்தை அடிப்படையாகக் கொண்டது.",
+    fleetSafetyHeader: "வாகன பாதுகாப்பு டாஷ்போர்டு",
+    activeAlertFeed: "நேரலை எச்சரிக்கைகள்",
+    registration: "பதிவு எண்",
+    model: "மாடல்",
+    status: "நிலை",
+    maxAllowedWeight: "அதிகபட்ச எடை",
+    currentWeight: "தற்போதைய எடை",
+    loadStatus: "சுமை நிலை",
+    gasConcentration: "வாயு அளவு",
+    alcoholSensor: "ஆல்கஹால் சோதனைக் கருவி",
+    overloadAlert: "அதிக சுமை எச்சரிக்கை",
+    safeLoad: "பாதுகாப்பான சுமை",
+    abnormalGas: "⚠️ அசாதாரணமானது",
+    verifyRequire: "⚠️ சரிபார்ப்பு தேவை",
+    normalState: "0 (சாதாரண நிலை)",
+    driverName: "ஓட்டுநர் பெயர்",
+    licenseNumber: "ஓட்டுநர் உரிம எண்",
+    tripsCompleted: "முடிக்கப்பட்ட பயணங்கள்",
+    totalViolations: "மொத்த மீறல்கள்",
+    documentsManager: "ஆவணங்கள் மேலாளர்",
+    expiryDate: "காலாவதி தேதி",
+    valid: "செல்லுபடியாகும்",
+    expired: "காலாவதியானது",
+    warning: "எச்சரிக்கை",
+    tripOrigin: "புறப்படும் இடம்",
+    tripDestination: "சேருமிடம்",
+    cargoTypeLabel: "சரக்கு வகை"
   },
   te: {
     title: "భారత్ లోడ్ రక్షక్",
@@ -345,6 +563,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "AI సిఫార్సు అమలు చేయండి",
     evaluatingDrivers: "డ్రైవర్లను మూల్యాంకనం చేస్తోంది...",
     assignDriverToTrip: "డ్రైవర్‌ను నియమించండి",
+    manageFleet: "ఫ్లీట్‌ను నిర్వహించండి →",
+    viewFullscreenMap: "పూర్తి మ్యాప్ చూడండి",
+    resolveBtn: "పరిష్కరించు →",
+    acknowledgeBtn: "అంగీకరించు",
     aiRecommendationTitle: "AI డ్రైవర్ సిఫార్సు ఇంజిన్",
     aiRecommendationDesc: "సేఫ్టీ రేటింగ్‌లు మరియు రిస్క్ మోడళ్లను మూల్యాంకనం చేస్తుంది",
     cargoType: "కార్గో రకం",
@@ -357,7 +579,34 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "రూట్ ఫాలోయింగ్ స్కోరు",
     drivingEfficiencyLabel: "డ్రైవింగ్ సామర్థ్య స్కోరు*",
     reliabilityLabel: "విశ్వసనీయత స్కోరు",
-    drivingEfficiencyNote: "* డ్రైవింగ్ సామర్థ్య స్కోరు వేగం మరియు సమయం ఆధారంగా లెక్కించబడుతుంది."
+    drivingEfficiencyNote: "* డ్రైవింగ్ సామర్థ్య స్కోరు వేగం మరియు సమయం ఆధారంగా లెక్కించబడుతుంది.",
+    fleetSafetyHeader: "ఫ్లీట్ రక్షణ డాష్‌బోర్డ్",
+    activeAlertFeed: "యాక్టివ్ అలర్ట్ ఫీడ్",
+    registration: "రిజిస్ట్రేషన్ నంబర్",
+    model: "మోడల్",
+    status: "స్థితి",
+    maxAllowedWeight: "గరిష్ట బరువు",
+    currentWeight: "ప్రస్తుత బరువు",
+    loadStatus: "లోడ్ స్థితి",
+    gasConcentration: "గ్యాస్ శాతం",
+    alcoholSensor: "ఆల్కహాల్ సెన్సార్",
+    overloadAlert: "ఓవర్‌లోడ్ అలర్ట్",
+    safeLoad: "సురక్షిత లోడ్",
+    abnormalGas: "⚠️ అసాధారణం",
+    verifyRequire: "⚠️ తనిఖీ అవసరం",
+    normalState: "0 (సధారణం)",
+    driverName: "డ్రైవర్ పేరు",
+    licenseNumber: "లైసెన్స్ నంబర్",
+    tripsCompleted: "పూర్తయిన ట్రిప్పులు",
+    totalViolations: "మొత్తం ఉల్లంఘనలు",
+    documentsManager: "డాక్యుమెంట్ల మేనేజర్",
+    expiryDate: "గడువు ముగిసే తేదీ",
+    valid: "చెల్లుబాటులో ఉంది",
+    expired: "గడువు ముగిసింది",
+    warning: "హెచ్చరిక",
+    tripOrigin: "ప్రారంభం",
+    tripDestination: "గమ్యం",
+    cargoTypeLabel: "కార్గో రకం"
   },
   kn: {
     title: "ಭಾರತ್ ಲೋಡ್ ರಕ್ಷಕ್",
@@ -389,6 +638,10 @@ export const translations: Record<Language, TranslationKeys> = {
     runAiRecommendation: "AI ಶಿಫಾರಸು ಚಲಾಯಿಸಿ",
     evaluatingDrivers: "ಚಾಲಕರ ಮೌಲ್ಯಮಾಪನ ಮಾಡಲಾಗುತ್ತಿದೆ...",
     assignDriverToTrip: "ಟ್ರಿಪ್‌ಗೆ ಚಾಲಕನನ್ನು ನಿಯೋಜಿಸಿ",
+    manageFleet: "ವಾಹನಗಳನ್ನು ನಿರ್ವಹಿಸಿ →",
+    viewFullscreenMap: "ಪೂರ್ಣ ನಕ್ಷೆ ವೀಕ್ಷಿಸಿ",
+    resolveBtn: "ಪರಿಹರಿಸಿ →",
+    acknowledgeBtn: "ಅಂಗೀಕರಿಸಿ",
     aiRecommendationTitle: "AI ಚಾಲಕ ಶಿಫಾರಸು ಎಂಜಿನ್",
     aiRecommendationDesc: "ಸುರಕ್ಷತಾ ರೇಟಿಂಗ್‌ಗಳು ಮತ್ತು ಅಪಾಯದ ಮಾದರಿಗಳನ್ನು ಮೌಲ್ಯಮಾಪನ ಮಾಡುತ್ತದೆ",
     cargoType: "ಸರಕು ಮಾದರಿ",
@@ -401,6 +654,33 @@ export const translations: Record<Language, TranslationKeys> = {
     routeComplianceLabel: "ರೂಟ್ ಪಾಲನೆ ಸ್ಕೋರ್",
     drivingEfficiencyLabel: "ಚಾಲನೆ ದಕ್ಷತೆ ಸ್ಕೋರ್*",
     reliabilityLabel: "ವಿಶ್ವಾಸಾರ್ಹತೆ ಸ್ಕೋರ್",
-    drivingEfficiencyNote: "* ಚಾಲನೆ ದಕ್ಷತೆ ಸ್ಕೋರ್ ವೇಗ ಮತ್ತು ಸಮಯದ ಆಧಾರದ ಮೇಲೆ ಲೆಕ್ಕಹಾಕಲಾಗುತ್ತದೆ."
+    drivingEfficiencyNote: "* ಚಾಲನೆ ದಕ್ಷತೆ ಸ್ಕೋರ್ ವೇಗ ಮತ್ತು ಸಮಯದ ಆಧಾರದ ಮೇಲೆ ಲೆಕ್ಕಹಾಕಲಾಗುತ್ತದೆ.",
+    fleetSafetyHeader: "ವಾಹನ ಸುರಕ್ಷತಾ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    activeAlertFeed: "ಸಕ್ರಿಯ ಎಚ್ಚರಿಕೆ ಫೀಡ್",
+    registration: "ನೋಂದಣಿ ಸಂಖ್ಯೆ",
+    model: "ಮಾದರಿ",
+    status: "ಸ್ಥಿತಿ",
+    maxAllowedWeight: "ಗರಿಷ್ಠ ತೂಕ",
+    currentWeight: "ಪ್ರಸ್ತುತ ತೂಕ",
+    loadStatus: "ಲೋಡ್ ಸ್ಥಿತಿ",
+    gasConcentration: "ಗ್ಯಾಸ್ ಪ್ರಮಾಣ",
+    alcoholSensor: "ಆಲ್ಕೋಹಾಲ್ ಸೆನ್ಸರ್",
+    overloadAlert: "ಓವರ್‌ಲೋಡ್ ಎಚ್ಚರಿಕೆ",
+    safeLoad: "ಸುರಕ್ಷಿತ ಲೋಡ್",
+    abnormalGas: "⚠️ ಅಸಹಜ",
+    verifyRequire: "⚠️ ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ",
+    normalState: "0 (ಸಾಮಾನ್ಯ)",
+    driverName: "ಚಾಲಕನ ಹೆಸರು",
+    licenseNumber: "ಚಾಲನಾ ಪರವಾನಗಿ ಸಂಖ್ಯೆ",
+    tripsCompleted: "ಪೂರ್ಣಗೊಂಡ ಟ್ರಿಪ್‌ಗಳು",
+    totalViolations: "ಒಟ್ಟು ಉಲ್ಲಂಘನೆಗಳು",
+    documentsManager: "ದಾಖಲೆಗಳ ನಿರ್ವಾಹಕ",
+    expiryDate: "ಅಂತಿಮ ದಿನಾಂಕ",
+    valid: "ಮಾನ್ಯವಾಗಿದೆ",
+    expired: "ಕಾಲಾವಧಿ ಮುಗಿದಿದೆ",
+    warning: "ಎಚ್ಚರಿಕೆ",
+    tripOrigin: "ಪ್ರಾರಂಭ",
+    tripDestination: "ಗಮ್ಯಸ್ಥಾನ",
+    cargoTypeLabel: "ಸರಕು ಮಾದರಿ"
   }
 };

@@ -155,6 +155,7 @@ export const App: React.FC = () => {
             telemetry={telemetry}
             onNavigateTab={(t) => setActiveTab(t)}
             onOpenDriverModal={() => setIsDriverModalOpen(true)}
+            lang={lang}
           />
         )}
 
@@ -167,7 +168,7 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'driver' && (
-          <DriverIntelligencePage drivers={drivers} onOpenModal={() => setIsDriverModalOpen(true)} />
+          <DriverIntelligencePage drivers={drivers} onOpenModal={() => setIsDriverModalOpen(true)} lang={lang} />
         )}
 
         {activeTab === 'fleet' && (
