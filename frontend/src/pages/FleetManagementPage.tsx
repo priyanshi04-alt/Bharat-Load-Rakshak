@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Truck, Device } from '../types';
 import { sendHardwareCommandApi } from '../services/api';
-import { Cpu, Radio, Shield, Volume2, Lightbulb, Monitor } from 'lucide-react';
+import { Cpu, Volume2, Lightbulb, Monitor } from 'lucide-react';
+import { Language, translations } from '../translations';
 
 interface FleetManagementPageProps {
   trucks: Truck[];
   devices: Device[];
+  lang?: Language;
 }
 
-export const FleetManagementPage: React.FC<FleetManagementPageProps> = ({ trucks, devices }) => {
+export const FleetManagementPage: React.FC<FleetManagementPageProps> = ({ trucks, devices, lang = 'en' }) => {
+  const t = translations[lang] || translations['en'];
   const [selectedTruck, setSelectedTruck] = useState<Truck | null>(trucks[0] || null);
   const [cmdFeedback, setCmdFeedback] = useState<string | null>(null);
 
@@ -32,35 +35,35 @@ export const FleetManagementPage: React.FC<FleetManagementPageProps> = ({ trucks
   return (
     <div>
       <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Fleet Inventory & ESP32 Device Health</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.fleetManagementTitle}</h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Manage physical hardware devices, firmware versions, battery levels, and bidirectional command channels
+          {t.fleetManagementSubtitle}
         </p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
         {/* Fleet Table */}
         <div className="glass-panel" style={{ padding: '20px' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px' }}>Truck & ESP32 Device Registry</h3>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '16px' }}>{t.tabFleet}</h3>
           <div className="table-container">
             <table className="custom-table">
               <thead>
                 <tr>
-                  <th>Registration</th>
-                  <th>Device ID</th>
-                  <th>Firmware</th>
-                  <th>Connection</th>
-                  <th>Battery</th>
+                  <th>{t.registration}</th>
+                  <th>{t.deviceId}</th>
+                  <th>{t.firmwareVersion}</th>
+                  <th>{t.status}</th>
+                  <th>{t.batteryVoltage}</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {trucks.map(t => {
-                  const dev = devices.find(d => d.deviceId === t.deviceId);
+                {trucks.map(tr => {
+                  const dev = devices.find(d => d.deviceId === tr.deviceId);
                   return (
-                    <tr key={t.truckId} style={{ background: selectedTruck?.truckId === t.truckId ? 'rgba(59, 130, 246, 0.1)' : 'transparent' }}>
-                      <td style={{ fontWeight: 700, color: '#ffffff' }}>{t.registrationNumber}</td>
-                      <td>{t.deviceId}</td>
+                    <tr key={tr.truckId} style={{ background: selectedTruck?.truckId === tr.truckId ? 'rgba(59, 130, 246, 0.1)' : 'transparent' }}>
+                      <td style={{ fontWeight: 700, color: '#ffffff' }}>{tr.registrationNumber}</td>
+                      <td>{tr.deviceId}</td>
                       <td style={{ color: 'var(--text-secondary)' }}>{dev?.firmwareVersion || 'v2.1.0-ESP32'}</td>
                       <td>
                         <span className={`badge ${dev?.connectionStatus === 'ONLINE' ? 'badge-safe' : 'badge-danger'}`}>
@@ -69,7 +72,7 @@ export const FleetManagementPage: React.FC<FleetManagementPageProps> = ({ trucks
                       </td>
                       <td>{dev?.batteryVoltage || 5.0} V</td>
                       <td>
-                        <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => setSelectedTruck(t)}>
+                        <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => setSelectedTruck(tr)}>
                           Control Hardware
                         </button>
                       </td>

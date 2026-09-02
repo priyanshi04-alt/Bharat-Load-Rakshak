@@ -1,19 +1,23 @@
 import React from 'react';
 import { Trip, UserRole } from '../types';
-import { Navigation, MapPin, Clock, Truck, ShieldCheck, Box } from 'lucide-react';
+import { MapPin } from 'lucide-react';
+import { Language, translations } from '../translations';
 
 interface TripsPageProps {
   trips: Trip[];
   currentRole: UserRole;
+  lang?: Language;
 }
 
-export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole }) => {
+export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole, lang = 'en' }) => {
+  const t = translations[lang] || translations['en'];
+
   return (
     <div>
       <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Supply Chain Visibility & Active Trips</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.tripsTitle}</h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Multi-stakeholder visibility platform connecting Warehouse, Driver, Truck Owner, and Logistics Managers
+          {t.tripsSubtitle}
         </p>
       </div>
 
@@ -26,7 +30,7 @@ export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole }) => {
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Cargo ID: {trip.cargoId}</div>
               </div>
               <span className={`badge ${trip.status === 'IN_TRANSIT' ? 'badge-info' : 'badge-safe'}`}>
-                {trip.status}
+                {trip.status === 'IN_TRANSIT' ? t.inTransit : trip.status === 'PLANNED' ? t.planned : t.completed}
               </span>
             </div>
 
@@ -35,7 +39,7 @@ export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole }) => {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <MapPin size={18} color="#3b82f6" style={{ marginTop: '2px' }} />
                 <div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>Origin</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>{t.origin}</div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{trip.origin}</div>
                 </div>
               </div>
@@ -47,7 +51,7 @@ export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole }) => {
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <MapPin size={18} color="#10b981" style={{ marginTop: '2px' }} />
                 <div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>Destination</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 700 }}>{t.destination}</div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{trip.destination}</div>
                 </div>
               </div>
@@ -60,7 +64,7 @@ export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole }) => {
                 <div style={{ fontWeight: 700 }}>{trip.truckId}</div>
               </div>
               <div>
-                <span style={{ color: 'var(--text-secondary)' }}>Driver ID:</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{t.driver}:</span>
                 <div style={{ fontWeight: 700 }}>{trip.driverId}</div>
               </div>
               <div>
@@ -68,7 +72,7 @@ export const TripsPage: React.FC<TripsPageProps> = ({ trips, currentRole }) => {
                 <div>{new Date(trip.startTime).toLocaleTimeString()}</div>
               </div>
               <div>
-                <span style={{ color: 'var(--text-secondary)' }}>Estimated ETA:</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{t.eta}:</span>
                 <div style={{ color: '#60a5fa', fontWeight: 600 }}>{new Date(trip.eta).toLocaleString()}</div>
               </div>
             </div>

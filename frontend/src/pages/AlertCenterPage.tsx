@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Alert } from '../types';
 import { acknowledgeAlertApi, resolveAlertApi } from '../services/api';
-import { AlertOctagon, CheckCircle2, ShieldAlert, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
+import { Language, translations } from '../translations';
 
 interface AlertCenterPageProps {
   alerts: Alert[];
   onRefresh: () => void;
+  lang?: Language;
 }
 
-export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefresh }) => {
+export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefresh, lang = 'en' }) => {
+  const t = translations[lang] || translations['en'];
   const [severityFilter, setSeverityFilter] = useState('ALL');
 
   const handleAcknowledge = async (alertId: string) => {
@@ -37,9 +40,9 @@ export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefr
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Centralized Fleet Alert Engine</h2>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.alertEngineTitle}</h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Real-time audit trail of Overload, Alcohol Threshold, Route Deviation, Gas Concentration, and Water Ingress alerts
+            {t.alertEngineSubtitle}
           </p>
         </div>
 
@@ -47,10 +50,10 @@ export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefr
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
           <Filter size={16} color="var(--text-secondary)" />
           <select value={severityFilter} onChange={e => setSeverityFilter(e.target.value)} style={{ background: 'transparent', color: '#fff', border: 'none', fontWeight: 600, fontSize: '0.85rem' }}>
-            <option value="ALL" style={{ background: '#111827' }}>All Severities</option>
-            <option value="CRITICAL" style={{ background: '#111827' }}>CRITICAL Only</option>
-            <option value="HIGH" style={{ background: '#111827' }}>HIGH Only</option>
-            <option value="MEDIUM" style={{ background: '#111827' }}>MEDIUM Only</option>
+            <option value="ALL" style={{ background: '#111827' }}>{t.allSeverities}</option>
+            <option value="CRITICAL" style={{ background: '#111827' }}>{t.criticalOnly}</option>
+            <option value="HIGH" style={{ background: '#111827' }}>{t.highOnly}</option>
+            <option value="MEDIUM" style={{ background: '#111827' }}>{t.mediumOnly}</option>
           </select>
         </div>
       </div>
@@ -60,20 +63,20 @@ export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefr
           <table className="custom-table">
             <thead>
               <tr>
-                <th>Severity</th>
-                <th>Alert Type</th>
-                <th>Truck / Driver</th>
-                <th>Message</th>
-                <th>Timestamp</th>
-                <th>Status</th>
-                <th>Resolution Action</th>
+                <th>{t.severity}</th>
+                <th>{t.alertType}</th>
+                <th>{t.truckDriver}</th>
+                <th>{t.message}</th>
+                <th>{t.timestamp}</th>
+                <th>{t.status}</th>
+                <th>{t.resolutionAction}</th>
               </tr>
             </thead>
             <tbody>
               {filteredAlerts.length === 0 ? (
                 <tr>
                   <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-                    No alerts match the selected filter.
+                    {t.noAlertsFound}
                   </td>
                 </tr>
               ) : (
@@ -97,16 +100,16 @@ export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefr
                       {alert.status === 'OPEN' && (
                         <div style={{ display: 'flex', gap: '6px' }}>
                           <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleAcknowledge(alert.ID)}>
-                            ACK
+                            {t.acknowledgeBtn}
                           </button>
                           <button className="btn-primary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleResolve(alert.ID)}>
-                            Resolve
+                            {t.resolveBtn}
                           </button>
                         </div>
                       )}
                       {alert.status === 'ACKNOWLEDGED' && (
                         <button className="btn-primary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => handleResolve(alert.ID)}>
-                          Resolve
+                          {t.resolveBtn}
                         </button>
                       )}
                       {alert.status === 'RESOLVED' && (

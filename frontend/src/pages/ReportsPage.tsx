@@ -1,20 +1,24 @@
 import React from 'react';
 import { FleetSummary, Alert } from '../types';
-import { BarChart3, Download, PieChart, ShieldCheck, FileSpreadsheet } from 'lucide-react';
+import { BarChart3, Download, PieChart } from 'lucide-react';
+import { Language, translations } from '../translations';
 
 interface ReportsPageProps {
   summary: FleetSummary;
   alerts: Alert[];
+  lang?: Language;
 }
 
-export const ReportsPage: React.FC<ReportsPageProps> = ({ summary, alerts }) => {
+export const ReportsPage: React.FC<ReportsPageProps> = ({ summary, alerts, lang = 'en' }) => {
+  const t = translations[lang] || translations['en'];
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Fleet Safety & Logistics Analytics Reports</h2>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.reportsTitle}</h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Audit compliance logs, trip completion metrics, incident distributions, and safety trend reports
+            {t.reportsSubtitle}
           </p>
         </div>
         <button className="btn-primary">
@@ -61,11 +65,11 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({ summary, alerts }) => 
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Average Driver Trust Score:</span>
+              <span>{t.avgDriverScore}:</span>
               <span style={{ fontWeight: 700, color: '#34d399' }}>{summary.averageTrustScore}/100</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Total Trips Completed:</span>
+              <span>{t.tripsCompleted}:</span>
               <span style={{ fontWeight: 700 }}>{summary.completedTrips}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>

@@ -1,18 +1,22 @@
 import React from 'react';
 import { VehicleDocument } from '../types';
-import { FileText, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { Language, translations } from '../translations';
 
 interface DocumentManagerPageProps {
   documents: VehicleDocument[];
+  lang?: Language;
 }
 
-export const DocumentManagerPage: React.FC<DocumentManagerPageProps> = ({ documents }) => {
+export const DocumentManagerPage: React.FC<DocumentManagerPageProps> = ({ documents, lang = 'en' }) => {
+  const t = translations[lang] || translations['en'];
+
   return (
     <div>
       <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Vehicle & Driver Compliance Documents</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.documentsTitle}</h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Automated compliance monitor issuing warnings at 30-day, 15-day, 7-day, and expired thresholds
+          {t.documentsSubtitle}
         </p>
       </div>
 
@@ -21,11 +25,11 @@ export const DocumentManagerPage: React.FC<DocumentManagerPageProps> = ({ docume
           <table className="custom-table">
             <thead>
               <tr>
-                <th>Document Type</th>
+                <th>{t.docType}</th>
                 <th>Truck ID</th>
-                <th>Document Number</th>
-                <th>Expiration Date</th>
-                <th>Compliance Status</th>
+                <th>{t.docNumber}</th>
+                <th>{t.expiryDate}</th>
+                <th>{t.status}</th>
                 <th>Action Required</th>
               </tr>
             </thead>
@@ -49,7 +53,7 @@ export const DocumentManagerPage: React.FC<DocumentManagerPageProps> = ({ docume
                     <td>{doc.expiryDate}</td>
                     <td>
                       <span className={`badge ${badgeClass}`}>
-                        {doc.status}
+                        {doc.status === 'EXPIRED' ? t.expired : doc.status.startsWith('WARNING') ? t.warning : t.valid}
                       </span>
                     </td>
                     <td>

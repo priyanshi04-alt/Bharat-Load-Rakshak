@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { sendSimulatedTelemetry } from '../services/api';
-import { Cpu, AlertTriangle, ShieldCheck, Wind, CloudRain, Navigation, Zap } from 'lucide-react';
+import { Cpu, AlertTriangle, ShieldCheck, Wind, CloudRain, Zap } from 'lucide-react';
+import { Language, translations } from '../translations';
 
 interface HardwareTestBenchPageProps {
   onRefresh: () => void;
+  lang?: Language;
 }
 
-export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ onRefresh }) => {
+export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ onRefresh, lang = 'en' }) => {
+  const t = translations[lang] || translations['en'];
   const [truckId, setTruckId] = useState('BLR-TRK-001');
-  const [deviceId, setDeviceId] = useState('BLR-DEV-001');
+  const [deviceId] = useState('BLR-DEV-001');
   const [weightKg, setWeightKg] = useState(8450);
   const [humidityPercent, setHumidityPercent] = useState(60);
-  const [rainDetected, setRainDetected] = useState(false);
+  const [rainDetected] = useState(false);
   const [gasValue, setGasValue] = useState(110);
   const [alcoholValue, setAlcoholValue] = useState(0);
-  const [latitude, setLatitude] = useState(28.6139);
-  const [longitude, setLongitude] = useState(77.2090);
+  const [latitude] = useState(28.6139);
+  const [longitude] = useState(77.2090);
   const [speedKmph, setSpeedKmph] = useState(60);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -53,9 +56,9 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
   return (
     <div>
       <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>ESP32 Hardware Test Bench & Real-Time Pipeline Injector</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.testbenchTitle}</h2>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          Simulate physical ESP32 sensor hardware readings to test the backend validation, alert engine, database persistence, and WebSocket updates
+          {t.testbenchSubtitle}
         </p>
       </div>
 
@@ -80,7 +83,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             >
               <AlertTriangle size={20} color="#f87171" />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: '#f87171' }}>Inject Weight Overload Event</div>
+                <div style={{ fontWeight: 700, color: '#f87171' }}>{t.injectOverload}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Sets weight to 12,500 kg (Limit: 10,000 kg). Triggers OVERLOAD Alert & BUZZER_ON command.</div>
               </div>
             </button>
@@ -93,7 +96,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             >
               <AlertTriangle size={20} color="#f87171" />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: '#f87171' }}>Inject Alcohol Threshold Event</div>
+                <div style={{ fontWeight: 700, color: '#f87171' }}>{t.injectAlcohol}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Sets MQ3 sensor reading to 380. Message: "Alcohol sensor threshold exceeded — verification required."</div>
               </div>
             </button>
@@ -106,7 +109,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             >
               <Wind size={20} color="#fbbf24" />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: '#fbbf24' }}>Inject MQ135 Abnormal Gas Concentration</div>
+                <div style={{ fontWeight: 700, color: '#fbbf24' }}>{t.injectGas}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Sets MQ135 reading to 480 PPM. Message: "Abnormal Gas Concentration Detected — Inspection Required."</div>
               </div>
             </button>
@@ -119,7 +122,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             >
               <CloudRain size={20} color="#60a5fa" />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: '#60a5fa' }}>Inject Rain / Water Ingress Event</div>
+                <div style={{ fontWeight: 700, color: '#60a5fa' }}>{t.injectRain}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Sets rainDetected = true and Humidity = 92%. Triggers WATER_INGRESS Alert.</div>
               </div>
             </button>
@@ -132,7 +135,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             >
               <ShieldCheck size={20} color="#34d399" />
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: '#34d399' }}>Reset Normal Telemetry Parameters</div>
+                <div style={{ fontWeight: 700, color: '#34d399' }}>{t.resetNormal}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>Returns all sensor values to safe baseline levels.</div>
               </div>
             </button>
@@ -158,7 +161,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
               <input type="text" value={truckId} onChange={e => setTruckId(e.target.value)} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
-              <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Weight (kg)</label>
+              <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t.currentWeight}</label>
               <input type="number" value={weightKg} onChange={e => setWeightKg(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
@@ -174,7 +177,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
               <input type="number" value={humidityPercent} onChange={e => setHumidityPercent(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
-              <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Speed (km/h)</label>
+              <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t.currentSpeed}</label>
               <input type="number" value={speedKmph} onChange={e => setSpeedKmph(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
             </div>
           </div>

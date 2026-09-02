@@ -160,11 +160,11 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'tracking' && (
-          <LiveTrackingPage telemetry={telemetry} trucks={trucks} />
+          <LiveTrackingPage telemetry={telemetry} trucks={trucks} lang={lang} />
         )}
 
         {activeTab === 'cargo' && (
-          <CargoMonitoringPage telemetry={telemetry} trucks={trucks} />
+          <CargoMonitoringPage telemetry={telemetry} trucks={trucks} lang={lang} />
         )}
 
         {activeTab === 'driver' && (
@@ -172,27 +172,27 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'fleet' && (
-          <FleetManagementPage trucks={trucks} devices={[]} />
+          <FleetManagementPage trucks={trucks} devices={[]} lang={lang} />
         )}
 
         {activeTab === 'alerts' && (
-          <AlertCenterPage alerts={alerts} onRefresh={loadData} />
+          <AlertCenterPage alerts={alerts} onRefresh={loadData} lang={lang} />
         )}
 
         {activeTab === 'trips' && (
-          <TripsPage trips={trips} currentRole={currentRole} />
+          <TripsPage trips={trips} currentRole={currentRole} lang={lang} />
         )}
 
         {activeTab === 'documents' && (
-          <DocumentManagerPage documents={documents} />
+          <DocumentManagerPage documents={documents} lang={lang} />
         )}
 
         {activeTab === 'reports' && (
-          <ReportsPage summary={summary} alerts={alerts} />
+          <ReportsPage summary={summary} alerts={alerts} lang={lang} />
         )}
 
         {activeTab === 'testbench' && (
-          <HardwareTestBenchPage onRefresh={loadData} />
+          <HardwareTestBenchPage onRefresh={loadData} lang={lang} />
         )}
       </main>
 
