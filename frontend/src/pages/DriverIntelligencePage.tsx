@@ -1,29 +1,48 @@
-import React from 'react';
-import { Driver } from '../types';
-import { ShieldCheck, Navigation, Gauge, CheckCircle2, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { Driver, UserRole } from '../types';
+import { ShieldCheck, Navigation, Gauge, CheckCircle2, Sparkles, UserPlus } from 'lucide-react';
 import { Language, translations } from '../translations';
+import { AddDriverModal } from '../components/AddDriverModal';
 
 interface DriverIntelligencePageProps {
   drivers: Driver[];
   onOpenModal: () => void;
+  onAddDriver?: (driver: Driver) => void;
+  currentRole?: UserRole;
   lang?: Language;
 }
 
-export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({ drivers, onOpenModal, lang = 'en' }) => {
+export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({
+  drivers,
+  onOpenModal,
+  onAddDriver,
+  currentRole = 'OWNER',
+  lang = 'en'
+}) => {
   const t = translations[lang] || translations['en'];
+  const [isAddDriverOpen, setIsAddDriverOpen] = useState(false);
+
+  const canAddDriver = currentRole === 'ADMIN' || currentRole === 'OWNER';
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{t.tabDriver} & {t.trustScore} Center</h2>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             Transparent explainable scoring model evaluating safety, route compliance, driving efficiency, and delivery reliability
           </p>
         </div>
-        <button className="btn-primary" onClick={onOpenModal}>
-          <Sparkles size={18} /> {t.aiDispatchWizard}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {canAddDriver && (
+            <button className="btn-secondary" onClick={() => setIsAddDriverOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <UserPlus size={18} color="var(--accent-blue)" /> Register New Driver
+            </button>
+          )}
+          <button className="btn-primary" onClick={onOpenModal}>
+            <Sparkles size={18} /> {t.aiDispatchWizard}
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '20px' }}>
@@ -94,6 +113,17 @@ export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({ 
           </div>
         ))}
       </div>
+
+      {canAddDriver && (
+        <AddDriverModal
+          isOpen={isAddDriverOpen}
+          onClose={() => setIsAddDriverOpen(false)}
+          onAddDriver={(newDriver) => {
+            if (onAddDriver) onAddDriver(newDriver);
+          }}
+          lang={lang}
+        />
+      )}
     </div>
   );
 };

@@ -169,7 +169,13 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'driver' && (
-          <DriverIntelligencePage drivers={drivers} onOpenModal={() => setIsDriverModalOpen(true)} lang={lang} />
+          <DriverIntelligencePage
+            drivers={drivers}
+            onOpenModal={() => setIsDriverModalOpen(true)}
+            onAddDriver={(newDriver) => setDrivers(prev => [newDriver, ...prev])}
+            currentRole={currentRole}
+            lang={lang}
+          />
         )}
 
         {activeTab === 'fleet' && (
