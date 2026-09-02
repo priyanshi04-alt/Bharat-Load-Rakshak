@@ -188,7 +188,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <th>{t.maxAllowedWeight}</th>
                 <th>{t.weighbridgeScale}</th>
                 <th>{t.loadStatus}</th>
-                <th>{t.action}</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
