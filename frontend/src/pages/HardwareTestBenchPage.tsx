@@ -92,11 +92,11 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
       </div>
 
       {/* HARDWARE CIRCUIT & OLED DISPLAY WIDGET (IN-PLACE REALTIME FEEDBACK) */}
-      <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)', border: '1px solid rgba(59, 130, 246, 0.4)' }}>
+      <div className="glass-panel" style={{ padding: '20px', marginBottom: '24px', background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Radio size={20} color="#60a5fa" className="pulse-dot-active" />
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>{t.circuitScreenTitle}</h3>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{t.circuitScreenTitle}</h3>
           </div>
           <span className="badge badge-info">MCU: ESP32-WROOM-32</span>
         </div>
@@ -120,7 +120,7 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
           </div>
 
           {/* LED Signal Lights & Buzzer Status */}
-          <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ background: 'var(--input-bg)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{t.physicalHardwareSignals}</div>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -245,27 +245,27 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
             <div>
               <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Truck ID</label>
-              <input type="text" value={truckId} onChange={e => setTruckId(e.target.value)} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
+              <input type="text" value={truckId} onChange={e => setTruckId(e.target.value)} style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
               <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t.currentWeight}</label>
-              <input type="number" value={weightKg} onChange={e => setWeightKg(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
+              <input type="number" value={weightKg} onChange={e => setWeightKg(Number(e.target.value))} style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
               <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>MQ135 Gas Reading</label>
-              <input type="number" value={gasValue} onChange={e => setGasValue(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
+              <input type="number" value={gasValue} onChange={e => setGasValue(Number(e.target.value))} style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
               <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>MQ3 Alcohol Reading</label>
-              <input type="number" value={alcoholValue} onChange={e => setAlcoholValue(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
+              <input type="number" value={alcoholValue} onChange={e => setAlcoholValue(Number(e.target.value))} style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
               <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Humidity (%)</label>
-              <input type="number" value={humidityPercent} onChange={e => setHumidityPercent(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
+              <input type="number" value={humidityPercent} onChange={e => setHumidityPercent(Number(e.target.value))} style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px', borderRadius: '6px' }} />
             </div>
             <div>
               <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{t.currentSpeed}</label>
-              <input type="number" value={speedKmph} onChange={e => setSpeedKmph(Number(e.target.value))} style={{ width: '100%', background: '#111827', border: '1px solid var(--border-color)', color: '#fff', padding: '8px', borderRadius: '6px' }} />
+              <input type="number" value={speedKmph} onChange={e => setSpeedKmph(Number(e.target.value))} style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px', borderRadius: '6px' }} />
             </div>
           </div>
 
