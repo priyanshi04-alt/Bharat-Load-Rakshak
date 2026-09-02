@@ -123,7 +123,47 @@ const MOCK_ALERTS: Alert[] = [
     type: 'OVERLOAD',
     severity: 'CRITICAL',
     message: 'OVERLOAD DETECTED: Weight 12,450 kg exceeds threshold limit 10,000 kg!',
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(Date.now() - 3600000 * 1).toISOString(),
+    status: 'OPEN'
+  },
+  {
+    ID: 'ALT-002',
+    truckId: 'BLR-TRK-002',
+    driverId: 'DRV-102',
+    type: 'ALCOHOL_THRESHOLD',
+    severity: 'HIGH',
+    message: 'MQ-3 Alcohol Sensor Reading: 380 mg/L (Safety Lock Engaged - Pending Inspector Clearance)',
+    timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
+    status: 'ACKNOWLEDGED'
+  },
+  {
+    ID: 'ALT-003',
+    truckId: 'BLR-TRK-003',
+    driverId: 'DRV-103',
+    type: 'ABNORMAL_GAS',
+    severity: 'HIGH',
+    message: 'MQ-135 Gas Sensor Reading: 450 PPM (Exhaust Valve Inspected & Container Cleared)',
+    timestamp: new Date(Date.now() - 3600000 * 8).toISOString(),
+    status: 'RESOLVED'
+  },
+  {
+    ID: 'ALT-004',
+    truckId: 'BLR-TRK-001',
+    driverId: 'DRV-101',
+    type: 'WATER_INGRESS',
+    severity: 'MEDIUM',
+    message: 'Cargo Bay Rain Moisture Detected (Waterproofing Canvas Fixed at Checkpoint)',
+    timestamp: new Date(Date.now() - 3600000 * 14).toISOString(),
+    status: 'RESOLVED'
+  },
+  {
+    ID: 'ALT-005',
+    truckId: 'BLR-TRK-002',
+    driverId: 'DRV-102',
+    type: 'ROUTE_DEVIATION',
+    severity: 'CRITICAL',
+    message: 'Vehicle deviated 8.4 km off designated NH-48 Expressway Corridor!',
+    timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
     status: 'OPEN'
   }
 ];
