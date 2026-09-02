@@ -71,6 +71,7 @@ export const App: React.FC = () => {
       ]);
 
       const savedCustom = JSON.parse(localStorage.getItem('BLR_CUSTOM_DRIVERS') || '[]');
+      const savedDocs = JSON.parse(localStorage.getItem('BLR_CUSTOM_DOCUMENTS') || '[]');
 
       if (sumData) setSummary(sumData);
       if (truckData && truckData.length > 0) setTrucks(truckData);
@@ -83,7 +84,12 @@ export const App: React.FC = () => {
       if (alertData) setAlerts(alertData);
       if (telemData) setTelemetry(telemData);
       if (tripData) setTrips(tripData);
-      if (docData) setDocuments(docData);
+      if (docData && docData.length > 0) {
+        const combinedDocs = [...savedDocs, ...docData.filter(d => !savedDocs.some((c: VehicleDocument) => c.ID === d.ID))];
+        setDocuments(combinedDocs);
+      } else if (savedDocs.length > 0) {
+        setDocuments(savedDocs);
+      }
     } catch (err) {
       console.error('Error loading initial backend data:', err);
     }
@@ -94,6 +100,24 @@ export const App: React.FC = () => {
     const updated = [newDriver, ...savedCustom.filter((c: Driver) => c.driverId !== newDriver.driverId)];
     localStorage.setItem('BLR_CUSTOM_DRIVERS', JSON.stringify(updated));
     setDrivers(prev => [newDriver, ...prev.filter(d => d.driverId !== newDriver.driverId)]);
+  };
+
+  const handleUploadDocument = (newDoc: VehicleDocument) => {
+    const savedDocs = JSON.parse(localStorage.getItem('BLR_CUSTOM_DOCUMENTS') || '[]');
+    const updated = [newDoc, ...savedDocs.filter((c: VehicleDocument) => c.ID !== newDoc.ID)];
+    localStorage.setItem('BLR_CUSTOM_DOCUMENTS', JSON.stringify(updated));
+    setDocuments(prev => [newDoc, ...prev.filter(d => d.ID !== newDoc.ID)]);
+  };
+
+  const handleDeleteDocument = (docId: string) => {
+    const savedDocs = JSON.parse(localStorage.getItem('BLR_CUSTOM_DOCUMENTS') || '[]');
+    const updated = savedDocs.filter((c: VehicleDocument) => c.ID !== docId);
+    localStorage.setItem('BLR_CUSTOM_DOCUMENTS', JSON.stringify(updated));
+    setDocuments(prev => prev.filter(d => d.ID !== docId));
+  };
+
+  const handleVerifyDocument = (docId: string) => {
+    setDocuments(prev => prev.map(d => d.ID === docId ? { ...d, status: 'VALID' } : d));
   };
 
   useEffect(() => {
@@ -205,7 +229,15 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'documents' && (
-          <DocumentManagerPage documents={documents} lang={lang} />
+          <DocumentManagerPage
+            documents={documents}
+            trucks={trucks}
+            currentRole={currentRole}
+            onUploadDocument={handleUploadDocument}
+            onDeleteDocument={handleDeleteDocument}
+            onVerifyDocument={handleVerifyDocument}
+            lang={lang}
+          />
         )}
 
         {activeTab === 'reports' && (
