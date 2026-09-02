@@ -70,9 +70,16 @@ export const App: React.FC = () => {
         fetchDocuments()
       ]);
 
+      const savedCustom = JSON.parse(localStorage.getItem('BLR_CUSTOM_DRIVERS') || '[]');
+
       if (sumData) setSummary(sumData);
       if (truckData && truckData.length > 0) setTrucks(truckData);
-      if (driverData && driverData.length > 0) setDrivers(driverData);
+      if (driverData && driverData.length > 0) {
+        const combined = [...savedCustom, ...driverData.filter(d => !savedCustom.some((c: Driver) => c.driverId === d.driverId))];
+        setDrivers(combined);
+      } else if (savedCustom.length > 0) {
+        setDrivers(savedCustom);
+      }
       if (alertData) setAlerts(alertData);
       if (telemData) setTelemetry(telemData);
       if (tripData) setTrips(tripData);
@@ -80,6 +87,13 @@ export const App: React.FC = () => {
     } catch (err) {
       console.error('Error loading initial backend data:', err);
     }
+  };
+
+  const handleAddDriver = (newDriver: Driver) => {
+    const savedCustom = JSON.parse(localStorage.getItem('BLR_CUSTOM_DRIVERS') || '[]');
+    const updated = [newDriver, ...savedCustom.filter((c: Driver) => c.driverId !== newDriver.driverId)];
+    localStorage.setItem('BLR_CUSTOM_DRIVERS', JSON.stringify(updated));
+    setDrivers(prev => [newDriver, ...prev.filter(d => d.driverId !== newDriver.driverId)]);
   };
 
   useEffect(() => {
@@ -172,7 +186,7 @@ export const App: React.FC = () => {
           <DriverIntelligencePage
             drivers={drivers}
             onOpenModal={() => setIsDriverModalOpen(true)}
-            onAddDriver={(newDriver) => setDrivers(prev => [newDriver, ...prev])}
+            onAddDriver={handleAddDriver}
             currentRole={currentRole}
             lang={lang}
           />
