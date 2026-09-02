@@ -48,7 +48,15 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
     return 'VALID';
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const readFileAsDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!documentNumber.trim()) {
       setError('Please enter document number');
@@ -58,22 +66,31 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
     setLoading(true);
     setError(null);
 
-    setTimeout(() => {
-      const newDoc: VehicleDocument = {
-        ID: `DOC-${Date.now().toString().slice(-4)}`,
-        truckId,
-        documentType,
-        documentNumber,
-        expiryDate,
-        status: calculateStatus(expiryDate)
-      };
+    let fileUrl: string | undefined = undefined;
+    if (selectedFile) {
+      try {
+        fileUrl = await readFileAsDataUrl(selectedFile);
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-      onUploadDocument(newDoc);
-      setDocumentNumber('');
-      setSelectedFile(null);
-      setLoading(false);
-      onClose();
-    }, 400);
+    const newDoc: VehicleDocument = {
+      ID: `DOC-${Date.now().toString().slice(-4)}`,
+      truckId,
+      documentType,
+      documentNumber,
+      expiryDate,
+      status: calculateStatus(expiryDate),
+      fileUrl,
+      fileName: selectedFile ? selectedFile.name : undefined
+    };
+
+    onUploadDocument(newDoc);
+    setDocumentNumber('');
+    setSelectedFile(null);
+    setLoading(false);
+    onClose();
   };
 
   return (

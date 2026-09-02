@@ -108,6 +108,8 @@ export interface VehicleDocument {
   documentNumber: string;
   expiryDate: string;
   status: 'VALID' | 'WARNING_30' | 'WARNING_15' | 'WARNING_7' | 'EXPIRED';
+  fileUrl?: string;
+  fileName?: string;
 }
 
 export interface FleetSummary {

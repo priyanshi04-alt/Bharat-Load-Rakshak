@@ -171,7 +171,7 @@ export const DocumentManagerPage: React.FC<DocumentManagerPageProps> = ({
               <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>Document Number</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent-blue)', fontFamily: 'monospace', marginBottom: '12px' }}>{viewingDoc.documentNumber}</div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
                 <div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Assigned Truck</div>
                   <div style={{ fontWeight: 600 }}>{viewingDoc.truckId}</div>
@@ -181,6 +181,42 @@ export const DocumentManagerPage: React.FC<DocumentManagerPageProps> = ({
                   <div style={{ fontWeight: 600 }}>{viewingDoc.expiryDate}</div>
                 </div>
               </div>
+
+              {/* Uploaded File Preview Section */}
+              {viewingDoc.fileUrl ? (
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Attached Scanned Document ({viewingDoc.fileName || 'Uploaded File'})</div>
+                  {viewingDoc.fileUrl.startsWith('data:image') || viewingDoc.fileUrl.match(/\.(jpg|jpeg|png|webp)/i) ? (
+                    <img
+                      src={viewingDoc.fileUrl}
+                      alt={viewingDoc.fileName || 'Uploaded Scanned Document'}
+                      style={{ width: '100%', maxHeight: '280px', objectFit: 'contain', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#000' }}
+                    />
+                  ) : (
+                    <iframe
+                      src={viewingDoc.fileUrl}
+                      title="PDF Preview"
+                      style={{ width: '100%', height: '260px', borderRadius: '8px', border: '1px solid var(--border-color)', background: '#fff' }}
+                    />
+                  )}
+                  <div style={{ marginTop: '10px', textAlign: 'right' }}>
+                    <a
+                      href={viewingDoc.fileUrl}
+                      download={viewingDoc.fileName || `${viewingDoc.documentType}-${viewingDoc.documentNumber}`}
+                      className="btn-secondary"
+                      style={{ padding: '4px 10px', fontSize: '0.75rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      📥 Download File
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ border: '1px dashed var(--border-color)', padding: '16px', borderRadius: '8px', textAlign: 'center', background: 'rgba(59, 130, 246, 0.05)' }}>
+                  <ShieldCheck size={32} color="var(--accent-emerald)" style={{ margin: '0 auto 6px' }} />
+                  <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--accent-emerald)' }}>Official Transport Authority Digital Copy</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>Verified & Sealed in Encrypted Vehicle Vault</div>
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
