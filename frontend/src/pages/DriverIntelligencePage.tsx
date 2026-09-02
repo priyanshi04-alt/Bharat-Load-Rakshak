@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Driver, UserRole } from '../types';
-import { ShieldCheck, Navigation, Gauge, CheckCircle2, Sparkles, UserPlus } from 'lucide-react';
+import { ShieldCheck, Navigation, Gauge, CheckCircle2, Sparkles, UserPlus, Trash2 } from 'lucide-react';
 import { Language, translations } from '../translations';
 import { AddDriverModal } from '../components/AddDriverModal';
 
@@ -8,6 +8,7 @@ interface DriverIntelligencePageProps {
   drivers: Driver[];
   onOpenModal: () => void;
   onAddDriver?: (driver: Driver) => void;
+  onDeleteDriver?: (driverId: string) => void;
   currentRole?: UserRole;
   lang?: Language;
 }
@@ -16,6 +17,7 @@ export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({
   drivers,
   onOpenModal,
   onAddDriver,
+  onDeleteDriver,
   currentRole = 'OWNER',
   lang = 'en'
 }) => {
@@ -50,7 +52,20 @@ export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({
           <div key={driver.driverId} className="glass-panel" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
               <div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>{driver.name}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>{driver.name}</h3>
+                  {canAddDriver && (
+                    <button
+                      style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer' }}
+                      title="Remove Driver"
+                      onClick={() => {
+                        if (onDeleteDriver) onDeleteDriver(driver.driverId);
+                      }}
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  )}
+                </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.licenseNumber}: {driver.licenseNumber}</div>
               </div>
               <div style={{ textAlign: 'right' }}>

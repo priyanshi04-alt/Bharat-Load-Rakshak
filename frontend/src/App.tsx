@@ -72,6 +72,7 @@ export const App: React.FC = () => {
 
       const savedCustom = JSON.parse(localStorage.getItem('BLR_CUSTOM_DRIVERS') || '[]');
       const savedDocs = JSON.parse(localStorage.getItem('BLR_CUSTOM_DOCUMENTS') || '[]');
+      const savedTrips = JSON.parse(localStorage.getItem('BLR_CUSTOM_TRIPS') || '[]');
 
       if (sumData) setSummary(sumData);
       if (truckData && truckData.length > 0) setTrucks(truckData);
@@ -83,7 +84,12 @@ export const App: React.FC = () => {
       }
       if (alertData) setAlerts(alertData);
       if (telemData) setTelemetry(telemData);
-      if (tripData) setTrips(tripData);
+      if (tripData && tripData.length > 0) {
+        const combinedTrips = [...savedTrips, ...tripData.filter(t => !savedTrips.some((c: Trip) => c.tripId === t.tripId))];
+        setTrips(combinedTrips);
+      } else if (savedTrips.length > 0) {
+        setTrips(savedTrips);
+      }
       if (docData && docData.length > 0) {
         const combinedDocs = [...savedDocs, ...docData.filter(d => !savedDocs.some((c: VehicleDocument) => c.ID === d.ID))];
         setDocuments(combinedDocs);
@@ -100,6 +106,27 @@ export const App: React.FC = () => {
     const updated = [newDriver, ...savedCustom.filter((c: Driver) => c.driverId !== newDriver.driverId)];
     localStorage.setItem('BLR_CUSTOM_DRIVERS', JSON.stringify(updated));
     setDrivers(prev => [newDriver, ...prev.filter(d => d.driverId !== newDriver.driverId)]);
+  };
+
+  const handleDeleteDriver = (driverId: string) => {
+    const savedCustom = JSON.parse(localStorage.getItem('BLR_CUSTOM_DRIVERS') || '[]');
+    const updated = savedCustom.filter((c: Driver) => c.driverId !== driverId);
+    localStorage.setItem('BLR_CUSTOM_DRIVERS', JSON.stringify(updated));
+    setDrivers(prev => prev.filter(d => d.driverId !== driverId));
+  };
+
+  const handleCreateTrip = (newTrip: Trip) => {
+    const savedTrips = JSON.parse(localStorage.getItem('BLR_CUSTOM_TRIPS') || '[]');
+    const updated = [newTrip, ...savedTrips.filter((c: Trip) => c.tripId !== newTrip.tripId)];
+    localStorage.setItem('BLR_CUSTOM_TRIPS', JSON.stringify(updated));
+    setTrips(prev => [newTrip, ...prev.filter(t => t.tripId !== newTrip.tripId)]);
+  };
+
+  const handleCompleteTrip = (tripId: string) => {
+    const savedTrips = JSON.parse(localStorage.getItem('BLR_CUSTOM_TRIPS') || '[]');
+    const updated = savedTrips.map((t: Trip) => t.tripId === tripId ? { ...t, status: 'COMPLETED' as const } : t);
+    localStorage.setItem('BLR_CUSTOM_TRIPS', JSON.stringify(updated));
+    setTrips(prev => prev.map(t => t.tripId === tripId ? { ...t, status: 'COMPLETED' as const } : t));
   };
 
   const handleUploadDocument = (newDoc: VehicleDocument) => {
@@ -211,6 +238,7 @@ export const App: React.FC = () => {
             drivers={drivers}
             onOpenModal={() => setIsDriverModalOpen(true)}
             onAddDriver={handleAddDriver}
+            onDeleteDriver={handleDeleteDriver}
             currentRole={currentRole}
             lang={lang}
           />
@@ -225,7 +253,15 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'trips' && (
-          <TripsPage trips={trips} currentRole={currentRole} lang={lang} />
+          <TripsPage
+            trips={trips}
+            trucks={trucks}
+            drivers={drivers}
+            currentRole={currentRole}
+            onCreateTrip={handleCreateTrip}
+            onCompleteTrip={handleCompleteTrip}
+            lang={lang}
+          />
         )}
 
         {activeTab === 'documents' && (
