@@ -52,20 +52,7 @@ export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({
           <div key={driver.driverId} className="glass-panel" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>{driver.name}</h3>
-                  {canAddDriver && (
-                    <button
-                      style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer' }}
-                      title="Remove Driver"
-                      onClick={() => {
-                        if (onDeleteDriver) onDeleteDriver(driver.driverId);
-                      }}
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                  )}
-                </div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>{driver.name}</h3>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{t.licenseNumber}: {driver.licenseNumber}</div>
               </div>
               <div style={{ textAlign: 'right' }}>
@@ -122,9 +109,34 @@ export const DriverIntelligencePage: React.FC<DriverIntelligencePageProps> = ({
             </div>
 
             {/* Note on Driving Efficiency Proxy */}
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '8px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.02)', padding: '8px', borderRadius: '6px', border: '1px solid var(--border-color)', marginBottom: '12px' }}>
               {t.drivingEfficiencyNote}
             </div>
+
+            {canAddDriver && (
+              <div style={{ paddingTop: '12px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.12)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#f87171',
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  onClick={() => {
+                    if (onDeleteDriver) onDeleteDriver(driver.driverId);
+                  }}
+                >
+                  <Trash2 size={15} /> Remove Driver
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
