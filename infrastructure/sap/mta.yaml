@@ -1,7 +1,7 @@
 _schema-version: '3.1'
 ID: bharat-load-rakshak
 version: 1.0.0
-description: "BHARAT LOAD RAKSHAK - AI + IoT Fleet Safety & Supply Chain Platform"
+description: "BHARAT LOAD RAKSHAK - AI + IoT Fleet Safety & Supply Chain Platform (SAP BTP Suite)"
 
 parameters:
   enable-parallel-deployments: true
@@ -18,6 +18,7 @@ modules:
       - name: blr-db
       - name: blr-xsuaa
       - name: blr-event-mesh
+      - name: blr-ai-core
     provides:
       - name: srv-api
         properties:
@@ -32,8 +33,23 @@ modules:
     requires:
       - name: blr-db
 
+  # 3. SAP Build Work Zone Approuter Module
+  - name: bharat-load-rakshak-approuter
+    type: approuter.nodejs
+    path: infrastructure/sap/approuter
+    parameters:
+      memory: 256M
+    requires:
+      - name: srv-api
+      - name: blr-xsuaa
+      - name: blr-html5-repo-runtime
+    provides:
+      - name: app-api
+        properties:
+          app-url: ${default-url}
+
 resources:
-  # 1. SAP HANA Cloud Persistence Instance
+  # 1. SAP HANA Cloud HDI Persistence Instance
   - name: blr-db
     type: com.sap.xs.hdi-container
     parameters:
@@ -54,3 +70,17 @@ resources:
     parameters:
       service: enterprise-messaging
       service-plan: default
+
+  # 4. SAP AI Core / SAP AI Launchpad Integration
+  - name: blr-ai-core
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: aicore
+      service-plan: extended
+
+  # 5. SAP HTML5 Application Repository for SAP Build Work Zone
+  - name: blr-html5-repo-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime

@@ -1,0 +1,22 @@
+{
+  "description": "SAP HANA Cloud Spatial GIS Indexing & Geo-Fencing Configuration for BHARAT LOAD RAKSHAK",
+  "spatialReferenceSystem": "EPSG:4326",
+  "indexedEntities": [
+    {
+      "entity": "bharat.load.rakshak.Telemetry",
+      "spatialColumn": "locationPoint",
+      "sourceFields": ["longitude", "latitude"],
+      "srid": 4326
+    },
+    {
+      "entity": "bharat.load.rakshak.Trips",
+      "originPoint": ["originLng", "originLat"],
+      "destPoint": ["destLng", "destLat"],
+      "srid": 4326
+    }
+  ],
+  "geoFencingRules": {
+    "routeToleranceKmDefault": 10.0,
+    "calculationMethod": "ST_Distance"
+  }
+}

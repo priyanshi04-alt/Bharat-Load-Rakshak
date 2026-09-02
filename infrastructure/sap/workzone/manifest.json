@@ -1,0 +1,46 @@
+{
+  "_version": "1.12.0",
+  "sap.app": {
+    "id": "bharat.load.rakshak.dashboard",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "BHARAT LOAD RAKSHAK - Fleet Safety & Cargo Platform",
+    "description": "Real-time IoT Fleet Tracking, Driver Risk Intelligence & Overload Protection",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "fleetService": {
+        "uri": "/odata/v4/fleet/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "sap-icon://shipping-status"
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.app.crossNavigation": {
+    "inbounds": {
+      "fleetDashboard-display": {
+        "semanticObject": "FleetSafety",
+        "action": "display",
+        "title": "BHARAT LOAD RAKSHAK Overview",
+        "signature": {
+          "parameters": {},
+          "additionalParameters": "allowed"
+        }
+      }
+    }
+  }
+}

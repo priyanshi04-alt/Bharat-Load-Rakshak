@@ -1,0 +1,25 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: blr-driver-risk-serving
+  annotations:
+    executables.ai.sap.com/name: "driver-risk-predictor"
+    executables.ai.sap.com/description: "BHARAT LOAD RAKSHAK - Driver Risk Index Scoring & Cargo Matching Model"
+    artifacts.ai.sap.com/driver-risk-model.kind: "model"
+spec:
+  inputs:
+    artifacts:
+      - name: driver-risk-model
+        path: /app/models
+  templates:
+    - name: serving-template
+      containers:
+        - name: predictor
+          image: "docker.io/bharatload/driver-risk-predictor:1.0.0"
+          ports:
+            - containerPort: 9000
+          env:
+            - name: STORAGE_PREFIX
+              value: "{{inputs.artifacts.driver-risk-model}}"
+            - name: PORT
+              value: "9000"

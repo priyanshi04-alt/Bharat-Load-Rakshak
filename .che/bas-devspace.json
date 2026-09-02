@@ -1,0 +1,12 @@
+{
+  "devspaceName": "BharatLoadRakshak-BAS",
+  "devspaceType": "FullStackCloudApplication",
+  "description": "SAP Business Application Studio DevSpace for BHARAT LOAD RAKSHAK CAP + Fiori + ML Platform",
+  "extensions": [
+    "sap.vscode-cds",
+    "sap.vscode-ui5-language-assistant",
+    "sap.vscode-application-generator",
+    "sap.vscode-mta-tools",
+    "ms-python.python"
+  ]
+}

@@ -14,7 +14,9 @@
     "test:api": "jest tests/telemetry_validation.test.js",
     "test:all": "jest",
     "db:reset": "npx cds deploy --to sqlite:db.sqlite",
-    "build": "cds build"
+    "build": "cds build",
+    "build:cf": "cds build --production && mbt build -p cf",
+    "deploy:cf": "cf deploy mta_archives/bharat-load-rakshak_1.0.0.mtar"
   },
   "dependencies": {
     "@cap-js/sqlite": "^3.0.2",

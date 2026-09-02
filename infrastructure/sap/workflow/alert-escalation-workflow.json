@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "workflowId": "blr_alert_escalation_workflow",
+  "name": "BHARAT LOAD RAKSHAK Critical Alert Approval & Escalation",
+  "description": "SAP Build Process Automation Workflow for Critical Overload, Driver Alcohol Violations, and Expiry Warning Approvals",
+  "version": "1.0.0",
+  "trigger": {
+    "type": "EVENT_MESH",
+    "eventTopic": "bharatloadrakshak/alerts/critical"
+  },
+  "steps": [
+    {
+      "stepId": "evaluate_severity",
+      "type": "CONDITION",
+      "condition": "$.severity == 'CRITICAL'",
+      "onTrue": "create_manager_approval_task",
+      "onFalse": "log_event"
+    },
+    {
+      "stepId": "create_manager_approval_task",
+      "type": "USER_TASK",
+      "assigneeRole": "LOGISTICS_MANAGER",
+      "title": "Critical Vehicle Safety Violation Escalation",
+      "formFields": [
+        { "id": "truckId", "label": "Truck ID", "type": "STRING", "readOnly": true },
+        { "id": "driverId", "label": "Driver ID", "type": "STRING", "readOnly": true },
+        { "id": "violationType", "label": "Violation Type", "type": "STRING", "readOnly": true },
+        { "id": "actionTaken", "label": "Recommended Action", "type": "ENUM", "options": ["REASSIGN_DRIVER", "HALT_TRUCK", "DISMISS_ALERT"] }
+      ]
+    },
+    {
+      "stepId": "dispatch_hardware_command",
+      "type": "SERVICE_TASK",
+      "serviceEndpoint": "/odata/v4/fleet/sendHardwareCommand",
+      "payload": {
+        "commandType": "BUZZER_ON",
+        "parameter": "SAFETY_HAZARD_ALERT"
+      }
+    }
+  ]
+}
