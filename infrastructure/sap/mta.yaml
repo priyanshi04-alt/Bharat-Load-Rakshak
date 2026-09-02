@@ -1,0 +1,56 @@
+_schema-version: '3.1'
+ID: bharat-load-rakshak
+version: 1.0.0
+description: "BHARAT LOAD RAKSHAK - AI + IoT Fleet Safety & Supply Chain Platform"
+
+parameters:
+  enable-parallel-deployments: true
+
+modules:
+  # 1. CAP Node.js Backend Service
+  - name: bharat-load-rakshak-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      memory: 512M
+    requires:
+      - name: blr-db
+      - name: blr-xsuaa
+      - name: blr-event-mesh
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+
+  # 2. Database Deployer for SAP HANA Cloud
+  - name: bharat-load-rakshak-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: blr-db
+
+resources:
+  # 1. SAP HANA Cloud Persistence Instance
+  - name: blr-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+
+  # 2. SAP Authorization & Trust Management (XSUAA)
+  - name: blr-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+
+  # 3. SAP Event Mesh / Advanced Event Mesh
+  - name: blr-event-mesh
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: enterprise-messaging
+      service-plan: default

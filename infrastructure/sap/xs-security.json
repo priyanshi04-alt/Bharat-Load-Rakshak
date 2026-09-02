@@ -1,0 +1,64 @@
+{
+  "xsappname": "bharat-load-rakshak",
+  "tenant-mode": "dedicated",
+  "description": "Security descriptor for BHARAT LOAD RAKSHAK Fleet Safety Platform",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.FleetAdmin",
+      "description": "Full administrative access to fleet and security configuration"
+    },
+    {
+      "name": "$XSAPPNAME.LogisticsManager",
+      "description": "Logistics manager dispatching and alert resolution"
+    },
+    {
+      "name": "$XSAPPNAME.TruckOwner",
+      "description": "Truck owner view access to fleet efficiency and trucks"
+    },
+    {
+      "name": "$XSAPPNAME.Driver",
+      "description": "Driver assigned trip view"
+    },
+    {
+      "name": "$XSAPPNAME.WarehouseUser",
+      "description": "Warehouse cargo dispatch and status view"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "FleetAdminRole",
+      "description": "Administrator Role",
+      "scope-references": [
+        "$XSAPPNAME.FleetAdmin"
+      ]
+    },
+    {
+      "name": "LogisticsManagerRole",
+      "description": "Logistics Manager Role",
+      "scope-references": [
+        "$XSAPPNAME.LogisticsManager"
+      ]
+    },
+    {
+      "name": "TruckOwnerRole",
+      "description": "Truck Owner Role",
+      "scope-references": [
+        "$XSAPPNAME.TruckOwner"
+      ]
+    },
+    {
+      "name": "DriverRole",
+      "description": "Driver Role",
+      "scope-references": [
+        "$XSAPPNAME.Driver"
+      ]
+    },
+    {
+      "name": "WarehouseUserRole",
+      "description": "Warehouse User Role",
+      "scope-references": [
+        "$XSAPPNAME.WarehouseUser"
+      ]
+    }
+  ]
+}

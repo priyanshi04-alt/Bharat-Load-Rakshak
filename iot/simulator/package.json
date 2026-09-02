@@ -1,0 +1,14 @@
+{
+  "name": "blr-hardware-simulator",
+  "version": "1.0.0",
+  "description": "Hardware Telemetry Simulator for BHARAT LOAD RAKSHAK",
+  "main": "simulator.js",
+  "scripts": {
+    "start": "node simulator.js"
+  },
+  "dependencies": {
+    "mqtt": "^5.5.2",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5"
+  }
+}

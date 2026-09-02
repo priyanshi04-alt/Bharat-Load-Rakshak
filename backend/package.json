@@ -1,0 +1,45 @@
+{
+  "name": "bharat-load-rakshak-backend",
+  "version": "1.0.0",
+  "description": "SAP CAP Backend for BHARAT LOAD RAKSHAK IoT Fleet & Cargo Monitoring Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "cds-serve",
+    "dev": "node server.js",
+    "test": "jest",
+    "test:unit": "jest tests/telemetry_validation.test.js tests/sensor_matrix.test.js",
+    "test:sensors": "jest tests/sensor_matrix.test.js",
+    "test:database": "jest tests/telemetry.test.js",
+    "test:alerts": "jest tests/sensor_matrix.test.js",
+    "test:api": "jest tests/telemetry_validation.test.js",
+    "test:all": "jest",
+    "db:reset": "npx cds deploy --to sqlite:db.sqlite",
+    "build": "cds build"
+  },
+  "dependencies": {
+    "@cap-js/sqlite": "^3.0.2",
+    "@sap/cds": "^7.9.0",
+    "aedes": "^0.51.0",
+    "axios": "^1.20.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mqtt": "^5.5.2",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^7.9.0",
+    "jest": "^29.7.0"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "driver": "node",
+        "credentials": {
+          "url": "db.sqlite"
+        }
+      }
+    }
+  }
+}
