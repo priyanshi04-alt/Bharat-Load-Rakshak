@@ -73,6 +73,7 @@ export const App: React.FC = () => {
       const savedCustom = JSON.parse(localStorage.getItem('BLR_CUSTOM_DRIVERS') || '[]');
       const savedDocs = JSON.parse(localStorage.getItem('BLR_CUSTOM_DOCUMENTS') || '[]');
       const savedTrips = JSON.parse(localStorage.getItem('BLR_CUSTOM_TRIPS') || '[]');
+      const savedAlertStatuses = JSON.parse(localStorage.getItem('BLR_ALERT_STATUSES') || '{}');
 
       if (sumData) setSummary(sumData);
       if (truckData && truckData.length > 0) setTrucks(truckData);
@@ -82,7 +83,10 @@ export const App: React.FC = () => {
       } else if (savedCustom.length > 0) {
         setDrivers(savedCustom);
       }
-      if (alertData) setAlerts(alertData);
+      if (alertData && alertData.length > 0) {
+        const updatedAlerts = alertData.map(a => savedAlertStatuses[a.ID] ? { ...a, status: savedAlertStatuses[a.ID] } : a);
+        setAlerts(updatedAlerts);
+      }
       if (telemData) setTelemetry(telemData);
       if (tripData && tripData.length > 0) {
         const combinedTrips = [...savedTrips, ...tripData.filter(t => !savedTrips.some((c: Trip) => c.tripId === t.tripId))];
@@ -99,6 +103,20 @@ export const App: React.FC = () => {
     } catch (err) {
       console.error('Error loading initial backend data:', err);
     }
+  };
+
+  const handleAcknowledgeAlert = (alertId: string) => {
+    const saved = JSON.parse(localStorage.getItem('BLR_ALERT_STATUSES') || '{}');
+    saved[alertId] = 'ACKNOWLEDGED';
+    localStorage.setItem('BLR_ALERT_STATUSES', JSON.stringify(saved));
+    setAlerts(prev => prev.map(a => a.ID === alertId ? { ...a, status: 'ACKNOWLEDGED' as const } : a));
+  };
+
+  const handleResolveAlert = (alertId: string) => {
+    const saved = JSON.parse(localStorage.getItem('BLR_ALERT_STATUSES') || '{}');
+    saved[alertId] = 'RESOLVED';
+    localStorage.setItem('BLR_ALERT_STATUSES', JSON.stringify(saved));
+    setAlerts(prev => prev.map(a => a.ID === alertId ? { ...a, status: 'RESOLVED' as const } : a));
   };
 
   const handleAddDriver = (newDriver: Driver) => {
@@ -249,7 +267,13 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'alerts' && (
-          <AlertCenterPage alerts={alerts} onRefresh={loadData} lang={lang} />
+          <AlertCenterPage
+            alerts={alerts}
+            onRefresh={loadData}
+            onAcknowledgeAlert={handleAcknowledgeAlert}
+            onResolveAlert={handleResolveAlert}
+            lang={lang}
+          />
         )}
 
         {activeTab === 'trips' && (

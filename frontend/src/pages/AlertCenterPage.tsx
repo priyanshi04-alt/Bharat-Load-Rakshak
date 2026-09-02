@@ -7,26 +7,34 @@ import { Language, translations } from '../translations';
 interface AlertCenterPageProps {
   alerts: Alert[];
   onRefresh: () => void;
+  onAcknowledgeAlert?: (alertId: string) => void;
+  onResolveAlert?: (alertId: string) => void;
   lang?: Language;
 }
 
-export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({ alerts, onRefresh, lang = 'en' }) => {
+export const AlertCenterPage: React.FC<AlertCenterPageProps> = ({
+  alerts,
+  onRefresh,
+  onAcknowledgeAlert,
+  onResolveAlert,
+  lang = 'en'
+}) => {
   const t = translations[lang] || translations['en'];
   const [severityFilter, setSeverityFilter] = useState('ALL');
 
   const handleAcknowledge = async (alertId: string) => {
+    if (onAcknowledgeAlert) onAcknowledgeAlert(alertId);
     try {
       await acknowledgeAlertApi(alertId, 'Manager_Admin');
-      onRefresh();
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleResolve = async (alertId: string) => {
+    if (onResolveAlert) onResolveAlert(alertId);
     try {
       await resolveAlertApi(alertId);
-      onRefresh();
     } catch (err) {
       console.error(err);
     }
