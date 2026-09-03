@@ -201,11 +201,21 @@ const MOCK_DOCUMENTS: VehicleDocument[] = [
   }
 ];
 
+async function safeFetchJson<T = any>(url: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  const contentType = res.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error('Non-JSON response received');
+  }
+  return await res.json();
+}
+
 export async function fetchFleetSummary(): Promise<FleetSummary> {
   try {
-    const res = await fetch(`${REST_BASE}/fleet/summary`);
-    if (!res.ok) throw new Error('Failed to fetch summary');
-    return await res.json();
+    return await safeFetchJson<FleetSummary>(`${REST_BASE}/fleet/summary`);
   } catch (err) {
     return {
       totalTrucks: 3,
@@ -223,8 +233,7 @@ export async function fetchFleetSummary(): Promise<FleetSummary> {
 
 export async function fetchTrucks(): Promise<Truck[]> {
   try {
-    const res = await fetch(`${ODATA_BASE}/Trucks`);
-    const data = await res.json();
+    const data = await safeFetchJson<any>(`${ODATA_BASE}/Trucks`);
     return (data && data.value && data.value.length > 0) ? data.value : MOCK_TRUCKS;
   } catch (err) {
     return MOCK_TRUCKS;
@@ -233,8 +242,7 @@ export async function fetchTrucks(): Promise<Truck[]> {
 
 export async function fetchDrivers(): Promise<Driver[]> {
   try {
-    const res = await fetch(`${ODATA_BASE}/Drivers`);
-    const data = await res.json();
+    const data = await safeFetchJson<any>(`${ODATA_BASE}/Drivers`);
     return (data && data.value && data.value.length > 0) ? data.value : MOCK_DRIVERS;
   } catch (err) {
     return MOCK_DRIVERS;
@@ -243,8 +251,7 @@ export async function fetchDrivers(): Promise<Driver[]> {
 
 export async function fetchAlerts(): Promise<Alert[]> {
   try {
-    const res = await fetch(`${ODATA_BASE}/Alerts?$orderby=timestamp desc`);
-    const data = await res.json();
+    const data = await safeFetchJson<any>(`${ODATA_BASE}/Alerts?$orderby=timestamp desc`);
     return (data && data.value && data.value.length > 0) ? data.value : MOCK_ALERTS;
   } catch (err) {
     return MOCK_ALERTS;
@@ -253,8 +260,7 @@ export async function fetchAlerts(): Promise<Alert[]> {
 
 export async function fetchLatestTelemetry(): Promise<Telemetry[]> {
   try {
-    const res = await fetch(`${ODATA_BASE}/Telemetry?$orderby=timestamp desc&$top=50`);
-    const data = await res.json();
+    const data = await safeFetchJson<any>(`${ODATA_BASE}/Telemetry?$orderby=timestamp desc&$top=50`);
     return (data && data.value && data.value.length > 0) ? data.value : MOCK_TELEMETRY;
   } catch (err) {
     return MOCK_TELEMETRY;
@@ -263,8 +269,7 @@ export async function fetchLatestTelemetry(): Promise<Telemetry[]> {
 
 export async function fetchTrips(): Promise<Trip[]> {
   try {
-    const res = await fetch(`${ODATA_BASE}/Trips`);
-    const data = await res.json();
+    const data = await safeFetchJson<any>(`${ODATA_BASE}/Trips`);
     return (data && data.value && data.value.length > 0) ? data.value : MOCK_TRIPS;
   } catch (err) {
     return MOCK_TRIPS;
@@ -273,8 +278,7 @@ export async function fetchTrips(): Promise<Trip[]> {
 
 export async function fetchDocuments(): Promise<VehicleDocument[]> {
   try {
-    const res = await fetch(`${ODATA_BASE}/VehicleDocuments`);
-    const data = await res.json();
+    const data = await safeFetchJson<any>(`${ODATA_BASE}/VehicleDocuments`);
     return (data && data.value && data.value.length > 0) ? data.value : MOCK_DOCUMENTS;
   } catch (err) {
     return MOCK_DOCUMENTS;
@@ -282,30 +286,39 @@ export async function fetchDocuments(): Promise<VehicleDocument[]> {
 }
 
 export async function acknowledgeAlertApi(alertId: string, acknowledgedBy: string) {
-  const res = await fetch(`${ODATA_BASE}/acknowledgeAlert`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ alertId, acknowledgedBy })
-  });
-  return await res.json();
+  try {
+    return await safeFetchJson(`${ODATA_BASE}/acknowledgeAlert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alertId, acknowledgedBy })
+    });
+  } catch (err) {
+    return { value: true, message: 'Alert acknowledged (Client Fallback)' };
+  }
 }
 
 export async function resolveAlertApi(alertId: string) {
-  const res = await fetch(`${ODATA_BASE}/resolveAlert`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ alertId })
-  });
-  return await res.json();
+  try {
+    return await safeFetchJson(`${ODATA_BASE}/resolveAlert`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alertId })
+    });
+  } catch (err) {
+    return { value: true, message: 'Alert resolved (Client Fallback)' };
+  }
 }
 
 export async function sendHardwareCommandApi(cmd: { deviceId: string; truckId: string; commandType: string; parameter: string }) {
-  const res = await fetch(`${ODATA_BASE}/sendHardwareCommand`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(cmd)
-  });
-  return await res.json();
+  try {
+    return await safeFetchJson(`${ODATA_BASE}/sendHardwareCommand`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cmd)
+    });
+  } catch (err) {
+    return { value: true, message: 'Command dispatched (Client Fallback)' };
+  }
 }
 
 export async function recommendDriverApi(payload: {
@@ -316,13 +329,11 @@ export async function recommendDriverApi(payload: {
   requiredSafetyLevel: string;
 }) {
   try {
-    const res = await fetch(`${ODATA_BASE}/recommendDriver`, {
+    return await safeFetchJson<any>(`${ODATA_BASE}/recommendDriver`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error('API server unreachable');
-    return await res.json();
   } catch (err) {
     // Client-side AI scoring calculation fallback for Vercel deployment
     const isHighValue = payload.cargoValue > 1500000 || payload.priority === 'CRITICAL' || payload.cargoType === 'HIGH_VALUE' || payload.cargoType === 'PERISHABLE';
@@ -347,23 +358,40 @@ export async function recommendDriverApi(payload: {
 
 // REST Telemetry Simulation POST
 export async function sendSimulatedTelemetry(payload: Partial<Telemetry>) {
-  const res = await fetch(`${REST_BASE}/telemetry`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  return await res.json();
+  try {
+    return await safeFetchJson<{ status: string; message: string; data?: any }>(`${REST_BASE}/telemetry`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (err: any) {
+    console.warn('[Telemetry API] Backend unreachable or static deployment, using client simulation fallback:', err);
+    const alertsGenerated =
+      (payload.weightKg && payload.weightKg > 10000) ||
+      (payload.alcoholValue && payload.alcoholValue > 150) ||
+      (payload.gasValue && payload.gasValue > 300) ||
+      payload.rainDetected ? 1 : 0;
+
+    return {
+      status: 'SUCCESS',
+      message: 'Telemetry ingested successfully (Client Simulation Mode)',
+      data: {
+        deviceId: payload.deviceId || 'BLR-DEV-001',
+        truckId: payload.truckId || 'BLR-TRK-001',
+        alertsGenerated,
+        commandsDispatched: alertsGenerated > 0 ? 1 : 0
+      }
+    };
+  }
 }
 
 export async function createDriverApi(driver: Partial<Driver>): Promise<Driver> {
   try {
-    const res = await fetch(`${ODATA_BASE}/Drivers`, {
+    return await safeFetchJson<Driver>(`${ODATA_BASE}/Drivers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(driver)
     });
-    if (!res.ok) throw new Error('Failed to create driver on server');
-    return await res.json();
   } catch (err) {
     // Return created driver for standalone client deployment
     const newDrv: Driver = {
