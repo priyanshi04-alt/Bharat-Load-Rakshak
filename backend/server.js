@@ -296,7 +296,8 @@ async function startServer() {
           deviceId: sanitized.deviceId,
           truckId: sanitized.truckId,
           alertsGenerated: alertResult.alertsCreated,
-          commandsDispatched: alertResult.commandsDispatched
+          commandsDispatched: alertResult.commandsDispatched,
+          alerts: alertResult.alerts
         }
       });
     } catch (err) {

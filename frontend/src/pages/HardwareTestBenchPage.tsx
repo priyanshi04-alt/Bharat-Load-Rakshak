@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import { sendSimulatedTelemetry } from '../services/api';
+import { Alert } from '../types';
 import { Cpu, AlertTriangle, Wind, CloudRain, Zap, Volume2, Radio, CheckCircle2 } from 'lucide-react';
 import { Language, translations } from '../translations';
 
 interface HardwareTestBenchPageProps {
+  alerts?: Alert[];
   onRefresh: () => void;
+  onAlertGenerated?: (newAlerts: Alert[]) => void;
+  onAcknowledgeAlert?: (alertId: string) => void;
+  onResolveAlert?: (alertId: string) => void;
   lang?: Language;
 }
 
-export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ onRefresh, lang = 'en' }) => {
+export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({
+  alerts = [],
+  onRefresh,
+  onAlertGenerated,
+  onAcknowledgeAlert,
+  onResolveAlert,
+  lang = 'en'
+}) => {
   const t = translations[lang] || translations['en'];
 
   // Current Active Testbench State
@@ -73,7 +85,11 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
 
     try {
       const res = await sendSimulatedTelemetry(payload);
-      setFeedback(`✓ Telemetry Transmitted to Backend! Alerts Generated: ${res.data?.alertsGenerated || 0}`);
+      const generated = res.data?.alerts || [];
+      if (generated.length > 0 && onAlertGenerated) {
+        onAlertGenerated(generated);
+      }
+      setFeedback(`✓ Telemetry Transmitted to Backend! Alerts Generated: ${res.data?.alertsGenerated || generated.length}`);
       onRefresh();
     } catch (err: any) {
       setFeedback(`❌ Ingestion Error: ${err.message}`);
@@ -273,6 +289,81 @@ export const HardwareTestBenchPage: React.FC<HardwareTestBenchPageProps> = ({ on
             {t.transmitTelemetryBtn}
           </button>
         </div>
+      </div>
+
+      {/* REAL-TIME GENERATED ALERTS STREAM FOR TESTBENCH */}
+      <div className="glass-panel" style={{ padding: '24px', marginTop: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <AlertTriangle size={22} color="#ef4444" />
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Live Generated Hardware Alerts Stream</h3>
+          </div>
+          <span className="badge badge-danger">
+            {alerts.filter(a => a.status === 'OPEN').length} Open Alerts Active
+          </span>
+        </div>
+
+        {alerts.length === 0 ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+            No hardware alerts triggered yet. Click one of the event presets above to simulate sensor breaches!
+          </div>
+        ) : (
+          <div className="table-container">
+            <table className="custom-table">
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Alert Type</th>
+                  <th>Truck ID</th>
+                  <th>Message</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alerts.slice(0, 10).map(alert => (
+                  <tr key={alert.ID}>
+                    <td>
+                      <span className={`badge ${alert.severity === 'CRITICAL' ? 'badge-danger' : alert.severity === 'HIGH' ? 'badge-warning' : 'badge-info'}`}>
+                        {alert.severity}
+                      </span>
+                    </td>
+                    <td style={{ fontWeight: 700, color: '#ffffff' }}>{alert.type}</td>
+                    <td>{alert.truckId}</td>
+                    <td style={{ maxWidth: '320px', fontSize: '0.8rem' }}>{alert.message}</td>
+                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>{new Date(alert.timestamp).toLocaleTimeString()}</td>
+                    <td>
+                      <span className={`badge ${alert.status === 'OPEN' ? 'badge-danger' : alert.status === 'ACKNOWLEDGED' ? 'badge-warning' : 'badge-safe'}`}>
+                        {alert.status}
+                      </span>
+                    </td>
+                    <td>
+                      {alert.status === 'OPEN' && (
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => onAcknowledgeAlert && onAcknowledgeAlert(alert.ID)}>
+                            Acknowledge
+                          </button>
+                          <button className="btn-primary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => onResolveAlert && onResolveAlert(alert.ID)}>
+                            Resolve
+                          </button>
+                        </div>
+                      )}
+                      {alert.status === 'ACKNOWLEDGED' && (
+                        <button className="btn-primary" style={{ padding: '4px 8px', fontSize: '0.75rem' }} onClick={() => onResolveAlert && onResolveAlert(alert.ID)}>
+                          Resolve
+                        </button>
+                      )}
+                      {alert.status === 'RESOLVED' && (
+                        <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 600 }}>✓ Resolved</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

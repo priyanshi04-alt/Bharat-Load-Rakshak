@@ -13,6 +13,7 @@ interface NavbarProps {
   onToggleTheme: () => void;
   lang: Language;
   onLangChange: (lang: Language) => void;
+  openAlertsCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -24,7 +25,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   theme,
   onToggleTheme,
   lang,
-  onLangChange
+  onLangChange,
+  openAlertsCount = 0
 }) => {
   const t = translations[lang] || translations['en'];
 
@@ -170,6 +172,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div style={{ display: 'flex', gap: '4px', padding: '0 24px', overflowX: 'auto' }}>
         {visibleTabs.map(tab => {
           const isActive = activeTab === tab.id;
+          const isAlertTab = tab.id === 'alerts';
           return (
             <button
               key={tab.id}
@@ -184,10 +187,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 fontSize: '0.875rem',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease'
+                transition: 'all 0.15s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              {tab.label}
+              <span>{tab.label}</span>
+              {isAlertTab && openAlertsCount > 0 && (
+                <span style={{ background: '#ef4444', color: '#ffffff', borderRadius: '10px', padding: '2px 7px', fontSize: '0.7rem', fontWeight: 700 }}>
+                  {openAlertsCount}
+                </span>
+              )}
             </button>
           );
         })}

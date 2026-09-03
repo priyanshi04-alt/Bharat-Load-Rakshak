@@ -74,6 +74,7 @@ export const App: React.FC = () => {
       const savedDocs = JSON.parse(localStorage.getItem('BLR_CUSTOM_DOCUMENTS') || '[]');
       const savedTrips = JSON.parse(localStorage.getItem('BLR_CUSTOM_TRIPS') || '[]');
       const savedAlertStatuses = JSON.parse(localStorage.getItem('BLR_ALERT_STATUSES') || '{}');
+      const savedCustomAlerts = JSON.parse(localStorage.getItem('BLR_CUSTOM_ALERTS') || '[]');
 
       if (sumData) setSummary(sumData);
       if (truckData && truckData.length > 0) setTrucks(truckData);
@@ -83,10 +84,21 @@ export const App: React.FC = () => {
       } else if (savedCustom.length > 0) {
         setDrivers(savedCustom);
       }
-      if (alertData && alertData.length > 0) {
-        const updatedAlerts = alertData.map(a => savedAlertStatuses[a.ID] ? { ...a, status: savedAlertStatuses[a.ID] } : a);
-        setAlerts(updatedAlerts);
-      }
+      
+      const rawAlerts = (alertData && alertData.length > 0) ? alertData : [];
+      const combinedAlerts = [...savedCustomAlerts, ...rawAlerts.filter(a => !savedCustomAlerts.some((c: Alert) => c.ID === a.ID))];
+      const updatedAlerts = combinedAlerts.map(a => savedAlertStatuses[a.ID] ? { ...a, status: savedAlertStatuses[a.ID] } : a);
+      setAlerts(updatedAlerts);
+
+      const openCount = updatedAlerts.filter(a => a.status === 'OPEN').length;
+      const criticalCount = updatedAlerts.filter(a => a.status === 'OPEN' && a.severity === 'CRITICAL').length;
+      setSummary(prev => ({
+        ...prev,
+        ...(sumData || {}),
+        openAlerts: openCount,
+        criticalAlerts: criticalCount
+      }));
+
       if (telemData) setTelemetry(telemData);
       if (tripData && tripData.length > 0) {
         const combinedTrips = [...savedTrips, ...tripData.filter(t => !savedTrips.some((c: Trip) => c.tripId === t.tripId))];
@@ -105,18 +117,45 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleAlertGenerated = (newAlerts: Alert[]) => {
+    if (!newAlerts || newAlerts.length === 0) return;
+    const savedCustomAlerts = JSON.parse(localStorage.getItem('BLR_CUSTOM_ALERTS') || '[]');
+    const updatedCustom = [...newAlerts, ...savedCustomAlerts.filter((c: Alert) => !newAlerts.some(n => n.ID === c.ID))];
+    localStorage.setItem('BLR_CUSTOM_ALERTS', JSON.stringify(updatedCustom));
+
+    setAlerts(prev => {
+      const merged = [...newAlerts, ...prev.filter(a => !newAlerts.some(n => n.ID === a.ID))];
+      const openCount = merged.filter(a => a.status === 'OPEN').length;
+      const criticalCount = merged.filter(a => a.status === 'OPEN' && a.severity === 'CRITICAL').length;
+      setSummary(s => ({ ...s, openAlerts: openCount, criticalAlerts: criticalCount }));
+      return merged;
+    });
+  };
+
   const handleAcknowledgeAlert = (alertId: string) => {
     const saved = JSON.parse(localStorage.getItem('BLR_ALERT_STATUSES') || '{}');
     saved[alertId] = 'ACKNOWLEDGED';
     localStorage.setItem('BLR_ALERT_STATUSES', JSON.stringify(saved));
-    setAlerts(prev => prev.map(a => a.ID === alertId ? { ...a, status: 'ACKNOWLEDGED' as const } : a));
+    setAlerts(prev => {
+      const updated = prev.map(a => a.ID === alertId ? { ...a, status: 'ACKNOWLEDGED' as const } : a);
+      const openCount = updated.filter(a => a.status === 'OPEN').length;
+      const criticalCount = updated.filter(a => a.status === 'OPEN' && a.severity === 'CRITICAL').length;
+      setSummary(s => ({ ...s, openAlerts: openCount, criticalAlerts: criticalCount }));
+      return updated;
+    });
   };
 
   const handleResolveAlert = (alertId: string) => {
     const saved = JSON.parse(localStorage.getItem('BLR_ALERT_STATUSES') || '{}');
     saved[alertId] = 'RESOLVED';
     localStorage.setItem('BLR_ALERT_STATUSES', JSON.stringify(saved));
-    setAlerts(prev => prev.map(a => a.ID === alertId ? { ...a, status: 'RESOLVED' as const } : a));
+    setAlerts(prev => {
+      const updated = prev.map(a => a.ID === alertId ? { ...a, status: 'RESOLVED' as const } : a);
+      const openCount = updated.filter(a => a.status === 'OPEN').length;
+      const criticalCount = updated.filter(a => a.status === 'OPEN' && a.severity === 'CRITICAL').length;
+      setSummary(s => ({ ...s, openAlerts: openCount, criticalAlerts: criticalCount }));
+      return updated;
+    });
   };
 
   const handleAddDriver = (newDriver: Driver) => {
@@ -188,7 +227,8 @@ export const App: React.FC = () => {
             setTelemetry(prev => [msg.data, ...prev.slice(0, 49)]);
             loadData();
           } else if (msg.type === 'ALERT_GENERATED') {
-            setAlerts(prev => [...(Array.isArray(msg.data) ? msg.data : [msg.data]), ...prev]);
+            const newAlerts = Array.isArray(msg.data) ? msg.data : [msg.data];
+            handleAlertGenerated(newAlerts);
             loadData();
           }
         } catch (err) {
@@ -215,6 +255,8 @@ export const App: React.FC = () => {
     };
   }, []);
 
+  const openAlertsCount = alerts.filter(a => a.status === 'OPEN').length;
+
   return (
     <div className="app-container">
       <Navbar
@@ -227,6 +269,7 @@ export const App: React.FC = () => {
         onToggleTheme={toggleTheme}
         lang={lang}
         onLangChange={(l) => setLang(l)}
+        openAlertsCount={openAlertsCount}
       />
 
       <main className="main-content">
@@ -305,7 +348,14 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'testbench' && (
-          <HardwareTestBenchPage onRefresh={loadData} lang={lang} />
+          <HardwareTestBenchPage
+            alerts={alerts}
+            onRefresh={loadData}
+            onAlertGenerated={handleAlertGenerated}
+            onAcknowledgeAlert={handleAcknowledgeAlert}
+            onResolveAlert={handleResolveAlert}
+            lang={lang}
+          />
         )}
       </main>
 

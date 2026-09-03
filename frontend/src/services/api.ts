@@ -366,20 +366,86 @@ export async function sendSimulatedTelemetry(payload: Partial<Telemetry>) {
     });
   } catch (err: any) {
     console.warn('[Telemetry API] Backend unreachable or static deployment, using client simulation fallback:', err);
-    const alertsGenerated =
-      (payload.weightKg && payload.weightKg > 10000) ||
-      (payload.alcoholValue && payload.alcoholValue > 150) ||
-      (payload.gasValue && payload.gasValue > 300) ||
-      payload.rainDetected ? 1 : 0;
+    
+    const generatedAlerts: Alert[] = [];
+    const timestamp = payload.timestamp || new Date().toISOString();
+    const truckId = payload.truckId || 'BLR-TRK-001';
+    const driverId = 'BLR-DRV-001';
+
+    if (payload.weightKg && payload.weightKg > 10000) {
+      generatedAlerts.push({
+        ID: `ALT-${Date.now()}-OVERLOAD`,
+        truckId,
+        driverId,
+        type: 'OVERLOAD',
+        severity: payload.weightKg > 12000 ? 'CRITICAL' : 'HIGH',
+        message: `OVERLOAD DETECTED: Payload weight ${payload.weightKg.toLocaleString()} kg exceeds legal limit of 10,000 kg! (Buzzer & Red LED Engaged)`,
+        timestamp,
+        status: 'OPEN'
+      });
+    }
+
+    if (payload.alcoholValue && payload.alcoholValue > 150) {
+      generatedAlerts.push({
+        ID: `ALT-${Date.now()}-ALCOHOL`,
+        truckId,
+        driverId,
+        type: 'ALCOHOL_THRESHOLD',
+        severity: 'CRITICAL',
+        message: `MQ-3 Alcohol Sensor Reading: ${payload.alcoholValue} (Threshold exceeded — Driver Safety Lock Engaged)`,
+        timestamp,
+        status: 'OPEN'
+      });
+    }
+
+    if (payload.gasValue && payload.gasValue > 300) {
+      generatedAlerts.push({
+        ID: `ALT-${Date.now()}-GAS`,
+        truckId,
+        driverId,
+        type: 'ABNORMAL_GAS',
+        severity: 'HIGH',
+        message: `MQ-135 Gas Sensor Reading: ${payload.gasValue} PPM (Abnormal Gas Concentration Detected in Cargo Area)`,
+        timestamp,
+        status: 'OPEN'
+      });
+    }
+
+    if (payload.rainDetected) {
+      generatedAlerts.push({
+        ID: `ALT-${Date.now()}-RAIN`,
+        truckId,
+        driverId,
+        type: 'WATER_INGRESS',
+        severity: 'HIGH',
+        message: `Water Ingress Alert: Rain Moisture Detected on Cargo Cover (Humidity: ${payload.humidityPercent || 92}%)`,
+        timestamp,
+        status: 'OPEN'
+      });
+    }
+
+    if (payload.speedKmph && payload.speedKmph > 80) {
+      generatedAlerts.push({
+        ID: `ALT-${Date.now()}-SPEED`,
+        truckId,
+        driverId,
+        type: 'OVERSPEED',
+        severity: payload.speedKmph > 100 ? 'HIGH' : 'MEDIUM',
+        message: `Overspeed Alert: Truck travelling at ${payload.speedKmph} km/h (Permitted limit: 80 km/h)`,
+        timestamp,
+        status: 'OPEN'
+      });
+    }
 
     return {
       status: 'SUCCESS',
       message: 'Telemetry ingested successfully (Client Simulation Mode)',
       data: {
         deviceId: payload.deviceId || 'BLR-DEV-001',
-        truckId: payload.truckId || 'BLR-TRK-001',
-        alertsGenerated,
-        commandsDispatched: alertsGenerated > 0 ? 1 : 0
+        truckId,
+        alertsGenerated: generatedAlerts.length,
+        commandsDispatched: generatedAlerts.length > 0 ? 1 : 0,
+        alerts: generatedAlerts
       }
     };
   }
